@@ -1,0 +1,6 @@
+data/org.thievingraccoon.Books.desktop.in.in
+data/org.thievingraccoon.Books.gschema.xml.in
+data/org.thievingraccoon.Books.metainfo.xml.in.in
+data/resources/ui/shortcuts.ui
+data/resources/ui/window.ui
+src/application.rs
