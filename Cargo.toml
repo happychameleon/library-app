@@ -10,3 +10,6 @@ pretty_env_logger = "0.4"
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
 once_cell = "1.5"
 gtk = {version = "0.2", package = "gtk4"}
+adw = {version = "0.1.0-alpha-6", package = "libadwaita"}
+
+olc = { git = "https://github.com/happychameleon/olc-rs.git", branch = "main" }
