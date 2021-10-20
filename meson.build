@@ -10,6 +10,8 @@ gnome = import('gnome')
 
 base_id = 'org.thievingraccoon.Books'
 
+dependency('sqlite3', version: '>= 3.20')
+
 dependency('glib-2.0', version: '>= 2.66')
 dependency('gio-2.0', version: '>= 2.66')
 dependency('gtk4', version: '>= 4.0.0')
