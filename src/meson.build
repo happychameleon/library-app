@@ -19,6 +19,8 @@ run_command(
 )
 
 rust_sources = files(
+  'ui/books_page.rs',
+  'ui/mod.rs',
   'application.rs',
   'config.rs',
   'main.rs',
