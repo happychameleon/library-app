@@ -2,21 +2,71 @@ use gettextrs::gettext;
 use log::{debug, info};
 
 use glib::clone;
+use glib::{Receiver, Sender};
+use glib::{GEnum};
+
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
+use gtk_macros::action;
+
+use strum_macros::Display;
+use strum_macros::EnumString;
+
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
 use crate::window::BooksApplicationWindow;
+
+#[derive(Display, Copy, Debug, Clone, EnumString, PartialEq, GEnum)]
+#[repr(u32)]
+#[genum(type_name = "BooksBooksView")]
+pub enum BooksView {
+    ScanBook,
+    EnterBookDetails,
+    Books,
+    Categories,
+    Authors,
+}
+
+#[derive(Debug, Clone)]
+pub enum Action {
+    // Books Views
+    Views(BooksView),
+
+    // Buttons
+    BackToBooks,
+}
 
 mod imp {
     use super::*;
     use glib::WeakRef;
     use once_cell::sync::OnceCell;
 
-    #[derive(Debug, Default)]
+    #[derive(Debug)]
     pub struct BooksApplication {
+
+        pub sender: Sender<Action>,
+        pub receiver: RefCell<Option<Receiver<Action>>>,
+
         pub window: OnceCell<WeakRef<BooksApplicationWindow>>,
+    }
+
+    impl Default for BooksApplication {
+        fn default() -> Self {
+            let (sender, r) = glib::MainContext::channel(glib::
+                PRIORITY_DEFAULT);
+            let receiver = RefCell::new(Some(r));
+
+            let window = OnceCell::new();
+
+            Self {
+                sender,
+                receiver,
+                window,
+            }
+        }
     }
 
     #[glib::object_subclass]
@@ -43,6 +93,9 @@ mod imp {
             self.window
                 .set(window.downgrade())
                 .expect("Window already set.");
+
+                let receiver = self.receiver.borrow_mut().take().unwrap();
+                receiver.attach(None, clone!(@strong app => move |action| app.process_actions(action)));
 
             app.main_window().present();
         }
@@ -147,5 +200,17 @@ impl BooksApplication {
         info!("Datadir: {}", PKGDATADIR);
 
         ApplicationExtManual::run(self);
+    }
+
+    fn process_actions(&self, action: Action) -> glib::Continue {
+
+        let imp = imp::BooksApplication::from_instance(self);
+
+        match action {
+            Action::Views(view) => {},
+            Action::BackToBooks => {},
+        }
+
+        glib::Continue(true)
     }
 }
