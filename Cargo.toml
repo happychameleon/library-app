@@ -9,6 +9,11 @@ log = "0.4"
 pretty_env_logger = "0.4"
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
 once_cell = "1.5"
+
+strum = "0.20.0"
+strum_macros = "0.20.1"
+
 gtk = {version = "0.3", package = "gtk4"}
+gtk-macros = "0.3.0"
 
 openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", branch = "main" }
