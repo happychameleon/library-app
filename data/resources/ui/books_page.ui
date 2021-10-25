@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="BooksPage" parent="AdwBin">
-    <property name="default-width">600</property>
-    <property name="default-height">400</property>
     <child>
       <object class="GtkScrolledWindow" id="scrolledwindow">
         <property name="hscrollbar_policy">never</property>
