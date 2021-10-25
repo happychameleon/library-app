@@ -5,7 +5,6 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-
 mod imp {
     use super::*;
     use adw::subclass::prelude::BinImpl;
@@ -27,9 +26,7 @@ mod imp {
         fn new() -> Self {
             let books_flowbox = TemplateChild::default();
 
-            Self {
-                books_flowbox,
-            }
+            Self { books_flowbox }
         }
 
         fn class_init(klass: &mut Self::Class) {

@@ -4,7 +4,7 @@ use gtk::{gio, glib};
 
 use adw::prelude::*;
 
-use crate::application::{BooksApplication, Action, BooksView};
+use crate::application::{Action, BooksApplication, BooksView};
 use crate::config::{APP_ID, PROFILE};
 use crate::ui::books_page::BooksPage;
 
@@ -15,8 +15,8 @@ impl Default for BooksView {
 }
 
 mod imp {
-    use std::cell::RefCell;
     use super::*;
+    use std::cell::RefCell;
 
     use gtk::CompositeTemplate;
 
@@ -34,7 +34,7 @@ mod imp {
         pub stack: TemplateChild<adw::ViewStack>,
         #[template_child]
         pub add_book: TemplateChild<gtk::Button>,
-        
+
         pub settings: gio::Settings,
         pub view: RefCell<BooksView>,
     }
@@ -107,11 +107,10 @@ glib::wrapper! {
 
 impl BooksApplicationWindow {
     pub fn new(app: &BooksApplication) -> Self {
-        glib::Object::new(&[("application", app)])
-            .expect("Failed to create BooksApplicationWindow")
+        glib::Object::new(&[("application", app)]).expect("Failed to create BooksApplicationWindow")
     }
 
-    pub fn setup_widgets(){}
+    pub fn setup_widgets() {}
 
     fn save_window_size(&self) -> Result<(), glib::BoolError> {
         let self_ = imp::BooksApplicationWindow::from_instance(self);

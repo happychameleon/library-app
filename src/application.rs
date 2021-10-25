@@ -2,8 +2,8 @@ use gettextrs::gettext;
 use log::{debug, info};
 
 use glib::clone;
+use glib::GEnum;
 use glib::{Receiver, Sender};
-use glib::{GEnum};
 
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
@@ -47,7 +47,6 @@ mod imp {
 
     #[derive(Debug)]
     pub struct BooksApplication {
-
         pub sender: Sender<Action>,
         pub receiver: RefCell<Option<Receiver<Action>>>,
 
@@ -56,8 +55,7 @@ mod imp {
 
     impl Default for BooksApplication {
         fn default() -> Self {
-            let (sender, r) = glib::MainContext::channel(glib::
-                PRIORITY_DEFAULT);
+            let (sender, r) = glib::MainContext::channel(glib::PRIORITY_DEFAULT);
             let receiver = RefCell::new(Some(r));
 
             let window = OnceCell::new();
@@ -95,8 +93,11 @@ mod imp {
                 .set(window.downgrade())
                 .expect("Window already set.");
 
-                let receiver = self.receiver.borrow_mut().take().unwrap();
-                receiver.attach(None, clone!(@strong app => move |action| app.process_actions(action)));
+            let receiver = self.receiver.borrow_mut().take().unwrap();
+            receiver.attach(
+                None,
+                clone!(@strong app => move |action| app.process_actions(action)),
+            );
 
             app.main_window().present();
         }
@@ -130,10 +131,7 @@ impl BooksApplication {
         glib::Object::new(&[
             ("application-id", &Some(APP_ID)),
             ("flags", &gio::ApplicationFlags::empty()),
-            (
-                "resource-base-path",
-                &Some("/org/thievingraccoon/Books/"),
-            ),
+            ("resource-base-path", &Some("/org/thievingraccoon/Books/")),
         ])
         .expect("Application initialization failed...")
     }
@@ -206,13 +204,12 @@ impl BooksApplication {
     }
 
     fn process_actions(&self, action: Action) -> glib::Continue {
-
         let imp = imp::BooksApplication::from_instance(self);
 
         match action {
-            Action::Views(view) => {},
-            Action::BackToBooks => {},
-            Action::AddBook => {},
+            Action::Views(view) => {}
+            Action::BackToBooks => {}
+            Action::AddBook => {}
         }
 
         glib::Continue(true)

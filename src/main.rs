@@ -1,8 +1,8 @@
 mod application;
 #[rustfmt::skip]
 mod config;
-mod window;
 mod ui;
+mod window;
 
 use gettextrs::{gettext, LocaleCategory};
 use gtk::{gio, glib};
