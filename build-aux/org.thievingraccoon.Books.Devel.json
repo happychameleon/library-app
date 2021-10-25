@@ -1,7 +1,7 @@
 {
     "app-id": "org.thievingraccoon.Books.Devel",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "40",
+    "runtime-version": "41",
     "sdk": "org.gnome.Sdk",
     "sdk-extensions": ["org.freedesktop.Sdk.Extension.rust-stable"],
     "command": "books",
@@ -28,24 +28,18 @@
         {
             "name" : "libadwaita",
             "buildsystem" : "meson",
-            "config-opts" : [
-                "-Dintrospection=enabled",
-                "-Dtests=false",
-                "-Dexamples=false",
-                "-Dvapi=false"
-            ],
-            "cleanup" : [
-                "/include",
-                "/lib/pkgconfig"
+            "config-opts": [
+              "-Dexamples=false",
+              "-Dtests=false"
             ],
             "sources" : [
-                {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/libadwaita.git",
-                    "branch" : "main"
-                }
+              {
+                "type" : "git",
+                "url" : "https://gitlab.gnome.org/GNOME/libadwaita.git",
+                "branch" : "main"
+              }
             ]
-        },
+        },          
         {
             "name": "books",
             "buildsystem": "meson",
