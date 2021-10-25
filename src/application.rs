@@ -37,6 +37,7 @@ pub enum Action {
 
     // Buttons
     BackToBooks,
+    AddBook,
 }
 
 mod imp {
@@ -209,6 +210,7 @@ impl BooksApplication {
         match action {
             Action::Views(view) => {},
             Action::BackToBooks => {},
+            Action::AddBook => {},
         }
 
         glib::Continue(true)

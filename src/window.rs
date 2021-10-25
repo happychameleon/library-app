@@ -30,6 +30,8 @@ mod imp {
         pub view_switcher: TemplateChild<gtk::StackSwitcher>,
         #[template_child]
         pub stack: TemplateChild<gtk::Stack>,
+        #[template_child]
+        pub add_book: TemplateChild<gtk::Button>,
 
         pub settings: gio::Settings,
         pub view: RefCell<BooksView>,
@@ -42,6 +44,7 @@ mod imp {
                 headerbar: TemplateChild::default(),
                 view_switcher: TemplateChild::default(),
                 stack: TemplateChild::default(),
+                add_book: TemplateChild::default(),
                 settings: gio::Settings::new(APP_ID),
                 view: RefCell::new(BooksView::Books),
             }
