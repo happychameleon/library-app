@@ -2,10 +2,18 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gio, glib};
 
-use crate::application::BooksApplication;
+use crate::application::{BooksApplication, Action, BooksView};
 use crate::config::{APP_ID, PROFILE};
+use crate::ui::books_page::BooksPage;
+
+impl Default for BooksView {
+    fn default() -> Self {
+        BooksView::Books
+    }
+}
 
 mod imp {
+    use std::cell::RefCell;
     use super::*;
 
     use gtk::CompositeTemplate;
@@ -14,15 +22,28 @@ mod imp {
     #[template(resource = "/org/thievingraccoon/Books/ui/window.ui")]
     pub struct BooksApplicationWindow {
         #[template_child]
+        pub books_page: TemplateChild<BooksPage>,
+
+        #[template_child]
         pub headerbar: TemplateChild<gtk::HeaderBar>,
+        #[template_child]
+        pub view_switcher: TemplateChild<gtk::StackSwitcher>,
+        #[template_child]
+        pub stack: TemplateChild<gtk::Stack>,
+
         pub settings: gio::Settings,
+        pub view: RefCell<BooksView>,
     }
 
     impl Default for BooksApplicationWindow {
         fn default() -> Self {
             Self {
+                books_page: TemplateChild::default(),
                 headerbar: TemplateChild::default(),
+                view_switcher: TemplateChild::default(),
+                stack: TemplateChild::default(),
                 settings: gio::Settings::new(APP_ID),
+                view: RefCell::new(BooksView::Books),
             }
         }
     }
@@ -84,6 +105,8 @@ impl BooksApplicationWindow {
         glib::Object::new(&[("application", app)])
             .expect("Failed to create BooksApplicationWindow")
     }
+
+    pub fn setup_widgets(){}
 
     fn save_window_size(&self) -> Result<(), glib::BoolError> {
         let self_ = imp::BooksApplicationWindow::from_instance(self);

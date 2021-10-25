@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="BooksPage" parent="GtkBox">
-    <property name="default-width">600</property>
-    <property name="default-height">400</property>
     <child>
       <object class="GtkScrolledWindow" id="scrolledwindow">
         <property name="hscrollbar_policy">never</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="label">Test</property>
+          </object>
+        </child>
         <child>
           <object class="GtkFlowBox" id="books_flowbox">
           </object>

@@ -21,6 +21,10 @@
     <property name="default-height">400</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="headerbar">
+        <child>
+          <object class="GtkStackSwitcher" id="view_switcher">
+          </object>
+        </child>
         <child type="end">
           <object class="GtkMenuButton" id="appmenu_button">
             <property name="icon-name">open-menu-symbolic</property>
@@ -30,11 +34,21 @@
       </object>
     </child>
     <child>
-      <object class="GtkLabel" id="label">
-        <property name="label" translatable="yes">Hello world!</property>
-        <style>
-          <class name="title-header"/>
-        </style>
+      <object class="GtkStack" id="stack">
+        <child>
+          <object class="BooksPage" id="books_page"/>
+        </child>
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">page1</property>
+            <property name="title">In the beginning…</property>
+            <property name="child">
+              <object class="GtkLabel">
+                <property name="label">It was dark</property>
+              </object>
+            </property>
+          </object>
+        </child>
       </object>
     </child>
   </template>
