@@ -20,14 +20,14 @@
     <property name="default-width">600</property>
     <property name="default-height">400</property>
     <child type="titlebar">
-      <object class="GtkHeaderBar" id="headerbar">
+      <object class="AdwHeaderBar" id="headerbar">
         <child type="start">
           <object class="GtkButton" id="add_book">
             <property name="icon-name">list-add-symbolic</property>
           </object>
         </child>
         <child>
-          <object class="GtkStackSwitcher" id="view_switcher">
+          <object class="AdwViewSwitcher" id="view_switcher">
           </object>
         </child>
         <child type="end">
@@ -39,20 +39,20 @@
       </object>
     </child>
     <child>
-      <object class="GtkStack" id="stack">
+      <object class="AdwViewStack" id="stack">
         <child>
-          <object class="BooksPage" id="books_page"/>
-        </child>
-        <child>
-          <object class="GtkStackPage">
+          <object class="AdwViewStackPage">
             <property name="name">page1</property>
             <property name="title">In the beginning…</property>
             <property name="child">
-              <object class="GtkLabel">
-                <property name="label">It was dark</property>
+              <object class="AdwStatusPage">
+                <property name="title">It was dark</property>
               </object>
             </property>
           </object>
+        </child>
+        <child>
+          <object class="BooksPage" id="books_page"/>
         </child>
       </object>
     </child>

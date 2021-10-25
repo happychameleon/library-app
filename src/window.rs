@@ -2,6 +2,8 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gio, glib};
 
+use adw::prelude::*;
+
 use crate::application::{BooksApplication, Action, BooksView};
 use crate::config::{APP_ID, PROFILE};
 use crate::ui::books_page::BooksPage;
@@ -25,14 +27,14 @@ mod imp {
         pub books_page: TemplateChild<BooksPage>,
 
         #[template_child]
-        pub headerbar: TemplateChild<gtk::HeaderBar>,
+        pub headerbar: TemplateChild<adw::HeaderBar>,
         #[template_child]
-        pub view_switcher: TemplateChild<gtk::StackSwitcher>,
+        pub view_switcher: TemplateChild<adw::ViewSwitcher>,
         #[template_child]
-        pub stack: TemplateChild<gtk::Stack>,
+        pub stack: TemplateChild<adw::ViewStack>,
         #[template_child]
         pub add_book: TemplateChild<gtk::Button>,
-
+        
         pub settings: gio::Settings,
         pub view: RefCell<BooksView>,
     }
