@@ -8,6 +8,7 @@ use once_cell::unsync::OnceCell;
 
 mod imp {
     use super::*;
+    use adw::subclass::prelude::BinImpl;
     use glib::subclass;
 
     #[derive(Debug, CompositeTemplate)]
@@ -20,7 +21,7 @@ mod imp {
     #[glib::object_subclass]
     impl ObjectSubclass for BooksPage {
         const NAME: &'static str = "BooksPage";
-        type ParentType = gtk::Box;
+        type ParentType = adw::Bin;
         type Type = super::BooksPage;
 
         fn new() -> Self {
@@ -44,7 +45,7 @@ mod imp {
 
     impl WidgetImpl for BooksPage {}
 
-    impl BoxImpl for BooksPage {}
+    impl BinImpl for BooksPage {}
 }
 
 glib::wrapper! {

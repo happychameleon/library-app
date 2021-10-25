@@ -15,5 +15,6 @@ strum_macros = "0.20.1"
 
 gtk = {version = "0.3", package = "gtk4"}
 gtk-macros = "0.3.0"
+adw = { version = "0.1.0-alpha", package = "libadwaita" }
 
 openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", branch = "main" }

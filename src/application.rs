@@ -110,6 +110,8 @@ mod imp {
             app.setup_css();
             app.setup_gactions();
             app.setup_accels();
+
+            adw::init();
         }
     }
 

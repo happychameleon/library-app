@@ -26,6 +26,27 @@
     },
     "modules": [
         {
+            "name" : "libadwaita",
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "-Dintrospection=enabled",
+                "-Dtests=false",
+                "-Dexamples=false",
+                "-Dvapi=false"
+            ],
+            "cleanup" : [
+                "/include",
+                "/lib/pkgconfig"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/GNOME/libadwaita.git",
+                    "branch" : "main"
+                }
+            ]
+        },
+        {
             "name": "books",
             "buildsystem": "meson",
             "run-tests": true,

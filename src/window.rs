@@ -2,10 +2,21 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gio, glib};
 
-use crate::application::BooksApplication;
+use adw::prelude::*;
+
+use crate::application::{BooksApplication, Action, BooksView};
 use crate::config::{APP_ID, PROFILE};
+use crate::ui::books_page::BooksPage;
+
+impl Default for BooksView {
+    fn default() -> Self {
+        BooksView::Books
+    }
+}
 
 mod imp {
+    use std::cell::RefCell;
+
     use super::*;
 
     use gtk::CompositeTemplate;
@@ -14,15 +25,28 @@ mod imp {
     #[template(resource = "/org/thievingraccoon/Books/ui/window.ui")]
     pub struct BooksApplicationWindow {
         #[template_child]
-        pub headerbar: TemplateChild<gtk::HeaderBar>,
+        pub books_page: TemplateChild<BooksPage>,
+
+        #[template_child]
+        pub headerbar: TemplateChild<adw::HeaderBar>,
+        #[template_child]
+        pub view_switcher: TemplateChild<adw::ViewSwitcher>,
+        #[template_child]
+        pub stack: TemplateChild<adw::ViewStack>,
+        
         pub settings: gio::Settings,
+        pub view: RefCell<BooksView>,
     }
 
     impl Default for BooksApplicationWindow {
         fn default() -> Self {
             Self {
+                books_page: TemplateChild::default(),
                 headerbar: TemplateChild::default(),
+                view_switcher: TemplateChild::default(),
+                stack: TemplateChild::default(),
                 settings: gio::Settings::new(APP_ID),
+                view: RefCell::new(BooksView::Books),
             }
         }
     }
@@ -99,6 +123,8 @@ impl BooksApplicationWindow {
 
         Ok(())
     }
+
+    pub fn setup_widgets(){}
 
     fn load_window_size(&self) {
         let self_ = imp::BooksApplicationWindow::from_instance(self);
