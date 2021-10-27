@@ -1,3 +1,5 @@
+use glib::Sender;
+
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gio, glib};
@@ -18,7 +20,8 @@ mod imp {
     use super::*;
     use std::cell::RefCell;
 
-    use gtk::CompositeTemplate;
+    use gtk::{CompositeTemplate, glib::ParamSpec};
+    use once_cell::sync::Lazy;
 
     #[derive(Debug, CompositeTemplate)]
     #[template(resource = "/org/thievingraccoon/Books/ui/window.ui")]
@@ -70,6 +73,38 @@ mod imp {
     }
 
     impl ObjectImpl for BooksApplicationWindow {
+        fn properties() -> &'static [glib::ParamSpec] {
+            static PROPERTIES: Lazy<Vec<ParamSpec>> = Lazy::new(|| {
+                vec![ParamSpec::new_enum(
+                    "view",
+                    "View",
+                    "View",
+                    BooksView::static_type(),
+                    BooksView::default() as i32,
+                    glib::ParamFlags::READWRITE,
+                )]
+            });
+
+            PROPERTIES.as_ref()
+        }
+
+        fn property(&self, _obj: &Self::Type, _id: usize, pspec: &ParamSpec) -> glib::Value {
+            match pspec.name() {
+                "view" => self.view.borrow().to_value(),
+                _ => unimplemented!(),
+            }
+        }
+
+        fn set_property(&self, obj: &Self::Type, _id: usize, value: &glib::Value, pspec: &ParamSpec) {
+            match pspec.name() {
+                "view" => {
+                    *self.view.borrow_mut() = value.get().unwrap();
+                    obj.update_view();
+                }
+                _ => unimplemented!(),
+            }
+        }
+
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
 
@@ -106,11 +141,36 @@ glib::wrapper! {
 }
 
 impl BooksApplicationWindow {
-    pub fn new(app: &BooksApplication) -> Self {
-        glib::Object::new(&[("application", app)]).expect("Failed to create BooksApplicationWindow")
+    pub fn new(sender: Sender<Action>, app: &BooksApplication) -> Self {
+        let window: BooksApplicationWindow = glib::Object::new(&[("application", app)]).expect("Failed to create BooksApplicationWindow");
+
+        window.setup_widgets(sender.clone());
+
+        window.set_view(BooksView::Books);
+
+        window
     }
 
-    pub fn setup_widgets() {}
+    pub fn setup_widgets(&self, sender: Sender<Action>) {}
+
+    pub fn set_view(&self, view: BooksView) {
+        self.set_property("view", &view).unwrap()
+    }
+
+    fn update_view(&self) {
+        let imp = imp::BooksApplicationWindow::from_instance(self);
+        let view = *imp.view.borrow();
+
+        match view {
+            BooksView::Authors => {}
+            BooksView::Books => {
+                imp.stack.set_visible_child(&imp.books_page.get())
+            }
+            BooksView::Categories  => {}
+            BooksView::EnterBookDetails => {}
+            BooksView::ScanBook  => {}
+        }
+    }
 
     fn save_window_size(&self) -> Result<(), glib::BoolError> {
         let self_ = imp::BooksApplicationWindow::from_instance(self);

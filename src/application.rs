@@ -87,8 +87,8 @@ mod imp {
                 window.present();
                 return;
             }
-
-            let window = BooksApplicationWindow::new(app);
+            
+            let window = app.create_window();
             self.window
                 .set(window.downgrade())
                 .expect("Window already set.");
@@ -134,6 +134,13 @@ impl BooksApplication {
             ("resource-base-path", &Some("/org/thievingraccoon/Books/")),
         ])
         .expect("Application initialization failed...")
+    }
+
+    fn create_window(&self) -> BooksApplicationWindow {
+        let imp = imp::BooksApplication::from_instance(self);
+        let window = BooksApplicationWindow::new(imp.sender.clone(), &self.clone());
+
+        window
     }
 
     fn main_window(&self) -> BooksApplicationWindow {
