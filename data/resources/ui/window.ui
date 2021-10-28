@@ -21,12 +21,13 @@
     <property name="default-height">400</property>
     <child type="titlebar">
       <object class="AdwHeaderBar" id="headerbar">
+        <property name="centering-policy">strict</property>
         <child type="start">
           <object class="GtkButton" id="add_book">
             <property name="icon-name">list-add-symbolic</property>
           </object>
         </child>
-        <child>
+        <child type="title">
           <object class="AdwViewSwitcher" id="view_switcher">
           </object>
         </child>
@@ -43,16 +44,11 @@
         <child>
           <object class="AdwViewStackPage">
             <property name="name">page1</property>
-            <property name="title">In the beginning…</property>
+            <property name="title">Books</property>
             <property name="child">
-              <object class="AdwStatusPage">
-                <property name="title">It was dark</property>
-              </object>
+              <object class="BooksPage" id="books_page"/>
             </property>
           </object>
-        </child>
-        <child>
-          <object class="BooksPage" id="books_page"/>
         </child>
       </object>
     </child>

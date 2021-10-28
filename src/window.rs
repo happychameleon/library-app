@@ -151,7 +151,11 @@ impl BooksApplicationWindow {
         window
     }
 
-    pub fn setup_widgets(&self, sender: Sender<Action>) {}
+    pub fn setup_widgets(&self, sender: Sender<Action>) {
+        let imp = imp::BooksApplicationWindow::from_instance(self);
+
+        imp.view_switcher.set_stack(Some(&imp.stack.get()));
+    }
 
     pub fn set_view(&self, view: BooksView) {
         self.set_property("view", &view).unwrap()
