@@ -37,7 +37,6 @@ pub enum Action {
 
     // Buttons
     BackToBooks,
-    AddBook,
 }
 
 mod imp {
@@ -214,9 +213,10 @@ impl BooksApplication {
         let imp = imp::BooksApplication::from_instance(self);
 
         match action {
-            Action::Views(view) => {}
+            Action::Views(view) => {
+                imp.window.get().unwrap().upgrade().unwrap().set_view(view);
+            }
             Action::BackToBooks => {}
-            Action::AddBook => {}
         }
 
         glib::Continue(true)

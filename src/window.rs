@@ -1,8 +1,13 @@
+use log::error;
+
 use glib::Sender;
+use glib::{clone, Value};
+use glib::{GEnum, ParamSpec, ToValue};
 
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::{gio, glib};
+use gtk::{gio, glib, CompositeTemplate};
+use gtk_macros::*;
 
 use adw::prelude::*;
 
@@ -145,10 +150,24 @@ impl BooksApplicationWindow {
         let window: BooksApplicationWindow = glib::Object::new(&[("application", app)]).expect("Failed to create BooksApplicationWindow");
 
         window.setup_widgets(sender.clone());
+        window.setup_gactions(sender);
 
         window.set_view(BooksView::Books);
 
         window
+    }
+
+    fn setup_gactions(&self, sender: Sender<Action>){
+        let imp = imp::BooksApplicationWindow::from_instance(self);
+        let app = self.application().unwrap();
+
+        action!(
+            self,
+            "add-book",
+            clone!(@strong sender => move |_,_| {
+                send!(sender, Action::Views(BooksView::ScanBook));
+            })
+        );
     }
 
     pub fn setup_widgets(&self, sender: Sender<Action>) {
