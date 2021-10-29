@@ -13,10 +13,10 @@ use adw::prelude::*;
 
 use crate::application::{Action, BooksApplication, BooksView};
 use crate::config::{APP_ID, PROFILE};
-use crate::ui::books_page::BooksPage;
-use crate::ui::scan_book_page::ScanBookPage;
 use crate::ui::authors_page::AuthorsPage;
 use crate::ui::book_form_page::BookFormPage;
+use crate::ui::books_page::BooksPage;
+use crate::ui::scan_book_page::ScanBookPage;
 
 impl Default for BooksView {
     fn default() -> Self {
@@ -28,7 +28,7 @@ mod imp {
     use super::*;
     use std::cell::RefCell;
 
-    use gtk::{CompositeTemplate, glib::ParamSpec};
+    use gtk::{glib::ParamSpec, CompositeTemplate};
     use once_cell::sync::Lazy;
 
     #[derive(Debug, CompositeTemplate)]
@@ -116,7 +116,13 @@ mod imp {
             }
         }
 
-        fn set_property(&self, obj: &Self::Type, _id: usize, value: &glib::Value, pspec: &ParamSpec) {
+        fn set_property(
+            &self,
+            obj: &Self::Type,
+            _id: usize,
+            value: &glib::Value,
+            pspec: &ParamSpec,
+        ) {
             match pspec.name() {
                 "view" => {
                     *self.view.borrow_mut() = value.get().unwrap();
@@ -163,7 +169,8 @@ glib::wrapper! {
 
 impl BooksApplicationWindow {
     pub fn new(sender: Sender<Action>, app: &BooksApplication) -> Self {
-        let window: BooksApplicationWindow = glib::Object::new(&[("application", app)]).expect("Failed to create BooksApplicationWindow");
+        let window: BooksApplicationWindow = glib::Object::new(&[("application", app)])
+            .expect("Failed to create BooksApplicationWindow");
 
         window.setup_widgets(sender.clone());
         window.setup_gactions(sender);
@@ -173,7 +180,7 @@ impl BooksApplicationWindow {
         window
     }
 
-    fn setup_gactions(&self, sender: Sender<Action>){
+    fn setup_gactions(&self, sender: Sender<Action>) {
         let imp = imp::BooksApplicationWindow::from_instance(self);
         let app = self.application().unwrap();
 
@@ -224,9 +231,9 @@ impl BooksApplicationWindow {
                 imp.to_books.set_visible(false);
                 imp.add_book.set_visible(true);
             }
-            BooksView::Categories  => {}
+            BooksView::Categories => {}
             BooksView::EnterBookDetails => {}
-            BooksView::ScanBook  => {
+            BooksView::ScanBook => {
                 imp.stack.set_visible_child(&imp.scan_book_page.get());
 
                 imp.view_switcher.set_visible(false);

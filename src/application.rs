@@ -86,7 +86,7 @@ mod imp {
                 window.present();
                 return;
             }
-            
+
             let window = app.create_window();
             self.window
                 .set(window.downgrade())

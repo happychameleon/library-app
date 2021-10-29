@@ -26,7 +26,9 @@ mod imp {
         fn new() -> Self {
             let books_detail_flowbox = TemplateChild::default();
 
-            Self { books_detail_flowbox }
+            Self {
+                books_detail_flowbox,
+            }
         }
 
         fn class_init(klass: &mut Self::Class) {
