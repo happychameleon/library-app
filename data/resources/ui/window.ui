@@ -28,6 +28,12 @@
             <property name="icon-name">list-add-symbolic</property>
           </object>
         </child>
+        <child type="start">
+          <object class="GtkButton" id="to_books">
+            <property name="action_name">win.to-books</property>
+            <property name="icon-name">go-previous-symbolic</property>
+          </object>
+        </child>
         <child type="title">
           <object class="AdwViewSwitcher" id="view_switcher">
           </object>
@@ -46,8 +52,35 @@
           <object class="AdwViewStackPage">
             <property name="name">page1</property>
             <property name="title">Books</property>
+            <property name="icon-name">x-office-address-book-symbolic</property>
             <property name="child">
               <object class="BooksPage" id="books_page"/>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwViewStackPage">
+            <property name="name">page2</property>
+            <property name="title">Authors</property>
+            <property name="icon-name">system-users-symbolic</property>
+            <property name="child">
+              <object class="AuthorsPage" id="authors_page"/>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwViewStackPage">
+            <property name="name">page3</property>
+            <property name="child">
+              <object class="ScanBookPage" id="scan_book_page"/>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwViewStackPage">
+            <property name="name">page4</property>
+            <property name="child">
+              <object class="BookFormPage" id="book_form_page"/>
             </property>
           </object>
         </child>

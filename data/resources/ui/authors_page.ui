@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="BooksPage" parent="AdwBin">
+  <template class="AuthorsPage" parent="AdwBin">
     <child>
       <object class="GtkScrolledWindow" id="scrolledwindow">
         <property name="hscrollbar_policy">never</property>
         <child>
-          <object class="GtkFlowBox" id="books_flowbox">
+          <object class="GtkFlowBox" id="authors_flowbox">
             <child>
               <object class="GtkLabel">
-                <property name="label">Books Test Page</property>
+                <property name="label">Author Test Page</property>
               </object>
             </child>
           </object>

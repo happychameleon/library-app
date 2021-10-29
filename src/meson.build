@@ -20,6 +20,9 @@ run_command(
 
 rust_sources = files(
   'ui/books_page.rs',
+  'ui/authors_page.rs',
+  'ui/scan_book_page.rs',
+  'ui/book_form_page.rs',
   'ui/mod.rs',
   'application.rs',
   'config.rs',

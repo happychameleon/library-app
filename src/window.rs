@@ -14,6 +14,9 @@ use adw::prelude::*;
 use crate::application::{Action, BooksApplication, BooksView};
 use crate::config::{APP_ID, PROFILE};
 use crate::ui::books_page::BooksPage;
+use crate::ui::scan_book_page::ScanBookPage;
+use crate::ui::authors_page::AuthorsPage;
+use crate::ui::book_form_page::BookFormPage;
 
 impl Default for BooksView {
     fn default() -> Self {
@@ -33,6 +36,12 @@ mod imp {
     pub struct BooksApplicationWindow {
         #[template_child]
         pub books_page: TemplateChild<BooksPage>,
+        #[template_child]
+        pub scan_book_page: TemplateChild<ScanBookPage>,
+        #[template_child]
+        pub authors_page: TemplateChild<AuthorsPage>,
+        #[template_child]
+        pub book_form_page: TemplateChild<BookFormPage>,
 
         #[template_child]
         pub headerbar: TemplateChild<adw::HeaderBar>,
@@ -42,6 +51,8 @@ mod imp {
         pub stack: TemplateChild<adw::ViewStack>,
         #[template_child]
         pub add_book: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub to_books: TemplateChild<gtk::Button>,
 
         pub settings: gio::Settings,
         pub view: RefCell<BooksView>,
@@ -51,10 +62,15 @@ mod imp {
         fn default() -> Self {
             Self {
                 books_page: TemplateChild::default(),
+                scan_book_page: TemplateChild::default(),
+                authors_page: TemplateChild::default(),
+                book_form_page: TemplateChild::default(),
+
                 headerbar: TemplateChild::default(),
                 view_switcher: TemplateChild::default(),
                 stack: TemplateChild::default(),
                 add_book: TemplateChild::default(),
+                to_books: TemplateChild::default(),
                 settings: gio::Settings::new(APP_ID),
                 view: RefCell::new(BooksView::Books),
             }
@@ -168,6 +184,15 @@ impl BooksApplicationWindow {
                 send!(sender, Action::Views(BooksView::ScanBook));
             })
         );
+
+        action!(
+            self,
+            "to-books",
+            clone!(@strong sender => move |_,_| {
+                send!(sender, Action::Views(BooksView::Books));
+            })
+        );
+        app.set_accels_for_action("win.to-books", &["Escape"]);
     }
 
     pub fn setup_widgets(&self, sender: Sender<Action>) {
@@ -185,13 +210,29 @@ impl BooksApplicationWindow {
         let view = *imp.view.borrow();
 
         match view {
-            BooksView::Authors => {}
+            BooksView::Authors => {
+                imp.stack.set_visible_child(&imp.authors_page.get());
+
+                imp.view_switcher.set_visible(true);
+                imp.to_books.set_visible(false);
+                imp.add_book.set_visible(true);
+            }
             BooksView::Books => {
-                imp.stack.set_visible_child(&imp.books_page.get())
+                imp.stack.set_visible_child(&imp.books_page.get());
+
+                imp.view_switcher.set_visible(true);
+                imp.to_books.set_visible(false);
+                imp.add_book.set_visible(true);
             }
             BooksView::Categories  => {}
             BooksView::EnterBookDetails => {}
-            BooksView::ScanBook  => {}
+            BooksView::ScanBook  => {
+                imp.stack.set_visible_child(&imp.scan_book_page.get());
+
+                imp.view_switcher.set_visible(false);
+                imp.to_books.set_visible(true);
+                imp.add_book.set_visible(false);
+            }
         }
     }
 
