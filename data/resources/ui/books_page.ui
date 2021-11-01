@@ -6,11 +6,18 @@
         <property name="hscrollbar_policy">never</property>
         <child>
           <object class="GtkFlowBox" id="books_flowbox">
-            <child>
-              <object class="GtkLabel">
-                <property name="label">Books Test Page</property>
-              </object>
-            </child>
+            <property name="column_spacing">10</property>
+            <property name="halign">fill</property>
+            <property name="hexpand">True</property>
+            <property name="homogeneous">True</property>
+            <property name="margin-bottom">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-start">18</property>
+            <property name="margin-top">18</property>
+            <property name="max-children-per-line">20</property>
+            <property name="min-children-per-line">1</property>
+            <property name="row_spacing">12</property>
+            <property name="valign">start</property>
           </object>
         </child>
       </object>
