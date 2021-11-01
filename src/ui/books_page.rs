@@ -5,6 +5,9 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
+use crate::application::Action;
+use crate::ui::book_cover;
+
 mod imp {
     use super::*;
     use adw::subclass::prelude::BinImpl;
@@ -15,6 +18,8 @@ mod imp {
     pub struct BooksPage {
         #[template_child]
         pub books_flowbox: TemplateChild<gtk::FlowBox>,
+
+        pub sender: OnceCell<Sender<Action>>,
     }
 
     #[glib::object_subclass]
@@ -25,8 +30,12 @@ mod imp {
 
         fn new() -> Self {
             let books_flowbox = TemplateChild::default();
+            let sender = OnceCell::new();
 
-            Self { books_flowbox }
+            Self {
+                books_flowbox,
+                sender,
+            }
         }
 
         fn class_init(klass: &mut Self::Class) {
@@ -49,4 +58,19 @@ glib::wrapper! {
     pub struct BooksPage (ObjectSubclass<imp::BooksPage>) @extends gtk::Widget, gtk::Box;
 }
 
-impl BooksPage {}
+impl BooksPage {
+    pub fn init(&self, sender: Sender<Action>) {
+        let imp = imp::BooksPage::from_instance(self);
+
+        imp.sender.set(sender.clone()).unwrap();
+
+        self.setup_widget(sender);
+    }
+
+    fn setup_widget(&self, sender: Sender<Action>) {
+        let imp = imp::BooksPage::from_instance(self);
+        let cover = book_cover::BookCover::new();
+
+        imp.books_flowbox.insert(&cover, -1)
+    }
+}

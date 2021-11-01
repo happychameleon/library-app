@@ -206,6 +206,8 @@ impl BooksApplicationWindow {
         let imp = imp::BooksApplicationWindow::from_instance(self);
 
         imp.view_switcher.set_stack(Some(&imp.stack.get()));
+
+        imp.books_page.init(sender.clone());
     }
 
     pub fn set_view(&self, view: BooksView) {

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="BookCover" parent="GtkFlowBoxChild">
+    <child>
+      <object class="GtkBox">
+        <property name="valign">start</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkStack" id="cover_stack">
+            <child>
+              <object class="GtkImage" id="cover_image">
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="book_title">
+            <property name="justify">center</property>
+            <property name="wrap">True</property>
+            <property name="ellipsize">middle</property>
+            <property name="max_width_chars">20</property>
+            <property name="lines">2</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="author_name">
+            <property name="ellipsize">middle</property>
+            <property name="max_width_chars">20</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
