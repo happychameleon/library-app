@@ -17,4 +17,4 @@ gtk = {version = "0.3", package = "gtk4"}
 gtk-macros = "0.3.0"
 adw = { version = "0.1.0-alpha", package = "libadwaita" }
 
-openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", branch = "main" }
+openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", rev="34afca8b012d3b8b1f435296c9911c13e7e47a8d" }
