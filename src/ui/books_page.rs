@@ -1,14 +1,14 @@
 use log::debug;
 
-use glib::{clone, Sender, MainContext};
 use glib::PRIORITY_DEFAULT;
+use glib::{clone, MainContext, Sender};
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-use openlibrary_client::{Edition, Client};
+use openlibrary_client::{Client, Edition};
 
 use crate::application::Action;
 use crate::ui::book_cover;
@@ -77,11 +77,11 @@ impl BooksPage {
         let main_context = MainContext::default();
 
         let books_flowbox: gtk::FlowBox = imp.books_flowbox.clone().downcast().unwrap();
-        
+
         main_context.spawn_local(clone!(@weak books_flowbox => async move {
             let client = Client::new();
             let client2 = Client::new();
-            
+
             let entity = client.entity_by_isbn("9781849352826").await;
             let entity2 = client2.entity_by_isbn("9781849352826").await;
 
@@ -93,7 +93,7 @@ impl BooksPage {
                 }
                 Err(error) => debug!("Failed to parse entity form ol: {}", error),
             };
-            
+
             match entity2 {
                 Ok(entity2) => {
                     let cover2 = book_cover::BookCover::new(entity2);

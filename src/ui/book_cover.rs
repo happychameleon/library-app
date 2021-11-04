@@ -5,7 +5,7 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-use openlibrary_client::{Entity, Author};
+use openlibrary_client::{Author, Entity};
 
 mod imp {
     use super::*;
