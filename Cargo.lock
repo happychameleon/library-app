@@ -1561,7 +1561,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "openlibrary-client"
 version = "0.1.0"
-source = "git+https://github.com/happychameleon/olc-rs.git?rev=29fe6e5d095c6fa6a9da7580dfa89329d80a300b#29fe6e5d095c6fa6a9da7580dfa89329d80a300b"
+source = "git+https://github.com/happychameleon/olc-rs.git?rev=c678ab933e409fbc39cc9b5f8bb7e23d289738e8#c678ab933e409fbc39cc9b5f8bb7e23d289738e8"
 dependencies = [
  "anyhow",
  "async-std",
@@ -1572,6 +1572,7 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "surf",
+ "void",
 ]
 
 [[package]]
@@ -2555,6 +2556,12 @@ name = "version_check"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5fecdca9a5291cc2b8dcf7dc02453fee791a280f3743cb0905f8822ae463b3fe"
+
+[[package]]
+name = "void"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 
 [[package]]
 name = "waker-fn"
