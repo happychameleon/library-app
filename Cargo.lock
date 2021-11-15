@@ -384,6 +384,7 @@ dependencies = [
 name = "books"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "ashpd",
  "diesel",
  "diesel_migrations",
