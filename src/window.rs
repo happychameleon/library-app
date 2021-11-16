@@ -85,6 +85,25 @@ mod imp {
 
         fn class_init(klass: &mut Self::Class) {
             Self::bind_template(klass);
+
+            klass.install_action("win.back", None, move |obj, _, _| {
+                let self_ = imp::BooksApplicationWindow::from_instance(&obj);
+                self_.stack.set_visible_child_name("main");
+
+                if self_
+                    .stack
+                    .visible_child_name()
+                    .map(|x| x == "scan")
+                    .unwrap_or(false)
+                {
+                    self_.scan_book_page.start();
+                }
+            });
+
+            klass.install_action("win.scan-qr", None, move |obj, _, _| {
+                let self_ = imp::BooksApplicationWindow::from_instance(&obj);
+                self_.stack.set_visible_child_name("scan");
+            });
         }
 
         // You must call `Widget`'s `init_template()` within `instance_init()`.
@@ -202,12 +221,33 @@ impl BooksApplicationWindow {
         app.set_accels_for_action("win.to-books", &["Escape"]);
     }
 
+    pub fn show_code_detected(&self, code_content: &str) {
+        // let self_ = imp::Window::from_instance(self);
+        // self_.scanned_page.set_scanned_code(code_content);
+        // self_.deck.set_visible_child_name("code");
+    }
+
+
     pub fn setup_widgets(&self, sender: Sender<Action>) {
         let imp = imp::BooksApplicationWindow::from_instance(self);
 
         imp.view_switcher.set_stack(Some(&imp.stack.get()));
 
         imp.books_page.init(sender.clone());
+
+        imp.scan_book_page
+        .connect_local(
+            "code-detected",
+            false,
+            glib::clone!(@weak self as win => @default-return None, move |args| {
+                let code = args.get(1).unwrap().get::<String>().unwrap();
+                win.show_code_detected(&code);
+
+                None
+            }),
+        )
+        .unwrap();
+
     }
 
     pub fn set_view(&self, view: BooksView) {
