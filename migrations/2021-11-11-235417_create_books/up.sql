@@ -11,7 +11,6 @@ CREATE TABLE `books` (
 CREATE TABLE authors (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     `olid` TEXT NOT NULL,
-    `uid` TEXT UNIQUE,
     `name` TEXT NOT NULL
 );
 
