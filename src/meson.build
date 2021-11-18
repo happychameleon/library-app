@@ -1,4 +1,5 @@
 global_conf = configuration_data()
+global_conf.set_quoted('NAME', name)
 global_conf.set_quoted('APP_ID', application_id)
 global_conf.set_quoted('PKGDATADIR', pkgdatadir)
 global_conf.set_quoted('PROFILE', profile)
