@@ -1,31 +1,32 @@
 use diesel::Queryable;
+
 use super::schema::authors;
 use super::schema::books;
 use super::schema::works;
 
-#[derive(Queryable)]
+#[derive(Queryable, PartialEq, Debug)]
 pub struct Book {
     pub id: i32,
     pub olid: String,
     pub uid: String,
     pub title: String,
-    pub author: String,
-    pub work: String,
+    pub author: Option<String>,
+    pub work: Option<String>,
 }
 
-#[derive(Queryable)]
+#[derive(Queryable, PartialEq, Debug)]
 pub struct Author {
     pub id: i32,
     pub olid: String,
     pub name: String,
 }
 
-#[derive(Queryable)]
+#[derive(Queryable, PartialEq, Debug)]
 pub struct Work {
     pub id: i32,
     pub oild: String,
     pub title: String,
-    pub author: String,
+    pub author: Option<String>,
 }
 
 #[derive(Insertable)]

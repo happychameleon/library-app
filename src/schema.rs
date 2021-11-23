@@ -10,7 +10,7 @@ table! {
     books (id) {
         id -> Integer,
         olid -> Text,
-        uid -> Nullable<Text>,
+        uid -> Text,
         title -> Text,
         author -> Nullable<Text>,
         work -> Nullable<Text>,

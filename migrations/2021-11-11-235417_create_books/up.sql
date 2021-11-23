@@ -2,7 +2,7 @@
 CREATE TABLE `books` (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     `olid` TEXT NOT NULL,
-    `uid` TEXT UNIQUE,
+    `uid` TEXT UNIQUE NOT NULL,
     `title` TEXT NOT NULL,
     `author` TEXT,
     `work` TEXT
