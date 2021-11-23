@@ -5,6 +5,8 @@ mod window;
 mod database;
 mod models;
 mod schema;
+mod path;
+mod dbqueries;
 
 #[macro_use]
 extern crate diesel;

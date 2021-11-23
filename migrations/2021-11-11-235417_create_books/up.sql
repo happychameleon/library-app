@@ -8,13 +8,13 @@ CREATE TABLE `books` (
     `work` TEXT
 );
 
-CREATE TABLE authors (
+CREATE TABLE `authors` (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     `olid` TEXT NOT NULL,
     `name` TEXT NOT NULL
 );
 
-CREATE TABLE works (
+CREATE TABLE `works` (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     `olid` TEXT NOT NULL,
     `title` TEXT NOT NULL,
