@@ -5,7 +5,8 @@ CREATE TABLE `books` (
     `uid` TEXT UNIQUE NOT NULL,
     `title` TEXT NOT NULL,
     `author` TEXT,
-    `work` TEXT
+    `work` TEXT,
+    `covers` TEXT 
 );
 
 CREATE TABLE `authors` (

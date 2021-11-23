@@ -14,6 +14,7 @@ table! {
         title -> Text,
         author -> Nullable<Text>,
         work -> Nullable<Text>,
+        covers -> Nullable<Text>,
     }
 }
 

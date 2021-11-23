@@ -12,6 +12,7 @@ pub struct Book {
     pub title: String,
     pub author: Option<String>,
     pub work: Option<String>,
+    pub covers: Option<String>,
 }
 
 #[derive(Queryable, PartialEq, Debug)]
@@ -37,6 +38,7 @@ pub struct NewBook<'a> {
     pub title: &'a str,
     pub author: &'a str,
     pub work: &'a str,
+    pub covers: &'a str,
 }
 
 #[derive(Insertable)]
