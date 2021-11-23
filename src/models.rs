@@ -31,7 +31,7 @@ pub struct Work {
 }
 
 #[derive(Insertable)]
-#[table_name="books"]
+#[table_name = "books"]
 pub struct NewBook<'a> {
     pub olid: &'a str,
     pub uid: &'a str,
@@ -42,14 +42,14 @@ pub struct NewBook<'a> {
 }
 
 #[derive(Insertable)]
-#[table_name="authors"]
+#[table_name = "authors"]
 pub struct NewAuthor<'a> {
     pub olid: &'a str,
     pub name: &'a str,
 }
 
 #[derive(Insertable)]
-#[table_name="works"]
+#[table_name = "works"]
 pub struct NewWork<'a> {
     pub olid: &'a str,
     pub title: &'a str,

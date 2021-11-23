@@ -1,18 +1,18 @@
 // Based on https://gitlab.gnome.org/World/decoder/-/blob/master/src/database.rs
 
-use std::format;
 use std::env;
-use std::path::PathBuf;
+use std::format;
 use std::fs;
 use std::fs::File;
+use std::path::PathBuf;
 
 extern crate dotenv;
 
-use diesel::{prelude::*, r2d2, r2d2::ConnectionManager};
+use anyhow::Result;
 use diesel::sqlite::SqliteConnection;
+use diesel::{prelude::*, r2d2, r2d2::ConnectionManager};
 use dotenv::dotenv;
 use once_cell::sync::Lazy;
-use anyhow::Result;
 
 use crate::config;
 use crate::path;
@@ -37,12 +37,13 @@ fn establish_connection() -> SqliteConnection {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    SqliteConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
+    SqliteConnection::establish(&database_url)
+        .expect(&format!("Error connecting to {}", database_url))
 }
 
 pub fn init_pool() -> Result<Pool> {
     init_database();
-    
+
     let db_path = &DB_PATH;
 
     let manager = ConnectionManager::<SqliteConnection>::new(db_path.to_str().unwrap());

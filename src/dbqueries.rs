@@ -5,7 +5,6 @@ use crate::models::{Author, Book, Work};
 use crate::schema::{authors, books, works};
 
 pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
-    
     let connection = database::connection().get().unwrap();
 
     let books = books::table.load::<Book>(&connection)?;

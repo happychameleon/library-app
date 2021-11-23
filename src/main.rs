@@ -1,12 +1,12 @@
 mod application;
 mod config;
+mod database;
+mod dbqueries;
+mod models;
+mod path;
+mod schema;
 mod ui;
 mod window;
-mod database;
-mod models;
-mod schema;
-mod path;
-mod dbqueries;
 
 #[macro_use]
 extern crate diesel;
