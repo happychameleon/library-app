@@ -14,7 +14,7 @@ pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
     Ok(books)
 }
 
-pub fn add_book(book: &Entity, uid: String) {
+pub fn add_book(book: &Entity, uid: &String) {
     let connection = database::connection().get().unwrap();
 
     let book: NewBook = NewBook {
@@ -29,10 +29,41 @@ pub fn add_book(book: &Entity, uid: String) {
     diesel::insert_into(books::table).values(&book).execute(&connection).expect("Error saving book");
 }
 
-pub fn work() {}
+pub fn work() -> Result<Vec<Work>, diesel::result::Error> {
+    let connection = database::connection().get().unwrap();
 
-pub fn add_work() {}
+    let works = works::table.load::<Work>(&connection)?;
 
-pub fn author() {}
+    Ok(works)
+}
 
-pub fn add_author() {}
+pub fn add_work(entity: &Entity) {
+    let connection = database::connection().get().unwrap();
+
+    let work: NewWork = NewWork {
+        olid: &entity.get_work().key,
+        title: &entity.get_work().title,
+        author: &entity.get_author_name(),
+    };
+
+    diesel::insert_into(works::table).values(&work).execute(&connection).expect("Error saving book");
+}
+
+pub fn author() -> Result<Vec<Author>, diesel::result::Error> {
+    let connection = database::connection().get().unwrap();
+
+    let authors = authors::table.load::<Author>(&connection)?;
+
+    Ok(authors)
+}
+
+pub fn add_author(entity: &Entity) {
+    let connection = database::connection().get().unwrap();
+
+    let author: NewAuthor = NewAuthor {
+        olid: &entity.get_author().key,
+        name: &entity.get_author_name(),
+    };
+
+    diesel::insert_into(authors::table).values(&author).execute(&connection).expect("Error saving book");
+}
