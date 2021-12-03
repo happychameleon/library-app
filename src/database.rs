@@ -1,5 +1,7 @@
 // Based on https://gitlab.gnome.org/World/decoder/-/blob/master/src/database.rs
 
+use log::debug;
+
 use std::env;
 use std::format;
 use std::fs;
@@ -16,6 +18,7 @@ use once_cell::sync::Lazy;
 
 use crate::config;
 use crate::path;
+use crate::schema::{books, authors, works};
 
 type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -33,6 +36,15 @@ pub fn connection() -> Pool {
     POOL.clone()
 }
 
+pub fn clear_db() {
+    debug!("Trying to run migrations to clear db");
+    let conn = &connection().get().unwrap();
+
+    diesel::delete(books::table).execute(conn).unwrap();
+    diesel::delete(works::table).execute(conn).unwrap();
+    diesel::delete(authors::table).execute(conn).unwrap();
+}
+
 fn establish_connection() -> SqliteConnection {
     dotenv().ok();
 
@@ -45,6 +57,8 @@ pub fn init_pool() -> Result<Pool> {
     init_database();
 
     let db_path = &DB_PATH;
+
+    debug!("Path to DB: {}", db_path.to_str().unwrap());
 
     let manager = ConnectionManager::<SqliteConnection>::new(db_path.to_str().unwrap());
     let pool = r2d2::Pool::builder().build(manager)?;
