@@ -227,7 +227,6 @@ impl BooksApplicationWindow {
         // self_.deck.set_visible_child_name("code");
     }
 
-
     pub fn setup_widgets(&self, sender: Sender<Action>) {
         let imp = imp::BooksApplicationWindow::from_instance(self);
 
@@ -236,18 +235,17 @@ impl BooksApplicationWindow {
         imp.books_page.init(sender.clone());
 
         imp.scan_book_page
-        .connect_local(
-            "code-detected",
-            false,
-            glib::clone!(@weak self as win => @default-return None, move |args| {
-                let code = args.get(1).unwrap().get::<String>().unwrap();
-                win.show_code_detected(&code);
+            .connect_local(
+                "code-detected",
+                false,
+                glib::clone!(@weak self as win => @default-return None, move |args| {
+                    let code = args.get(1).unwrap().get::<String>().unwrap();
+                    win.show_code_detected(&code);
 
-                None
-            }),
-        )
-        .unwrap();
-
+                    None
+                }),
+            )
+            .unwrap();
     }
 
     pub fn clear_books_page(&self) {

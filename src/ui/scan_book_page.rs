@@ -1,5 +1,6 @@
 // https://gitlab.gnome.org/World/decoder/-/blob/master/src/widgets/camera_page.rs
 
+use anyhow;
 use ashpd::{desktop::camera, zbus};
 use glib::clone;
 use glib::subclass;
@@ -8,14 +9,13 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use once_cell::sync::Lazy;
 use std::os::unix::prelude::RawFd;
-use anyhow;
 
 // use crate::screenshot;
 use crate::ui::CameraPaintable;
 
 mod imp {
-    use gtk::CompositeTemplate;
     use adw::subclass::prelude::*;
+    use gtk::CompositeTemplate;
 
     use super::*;
 
