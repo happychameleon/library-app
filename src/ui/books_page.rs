@@ -7,11 +7,14 @@ use gtk::subclass::prelude::*;
 use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
+use rand::prelude::*;
+use rand::distributions::Alphanumeric;
 
 use openlibrary_client::{Client, Edition};
 
 use crate::application::Action;
 use crate::ui::book_cover;
+use crate::dbqueries;
 
 mod imp {
     use super::*;
@@ -72,6 +75,30 @@ impl BooksPage {
         self.setup_widget(sender);
     }
 
+    // Something does not quite work here, does not remove all children
+    pub fn clear_books_page(&self) {
+        let imp = imp::BooksPage::from_instance(self);
+        let books_flowbox: gtk::FlowBox = imp.books_flowbox.clone().downcast().unwrap();
+
+        let mut count = 0i32;
+        count = 0;
+
+        loop {
+            let book = books_flowbox.child_at_index(count);
+
+            match book {
+                Some(book) => {
+                    books_flowbox.remove(&book);
+                }
+                None => {
+                    break;
+                }
+            }
+
+            count += 1;
+        }
+    }
+
     fn setup_widget(&self, sender: Sender<Action>) {
         let imp = imp::BooksPage::from_instance(self);
         let main_context = MainContext::default();
@@ -85,22 +112,37 @@ impl BooksPage {
             let entity = client.entity_by_isbn("9781849352826").await;
             let entity2 = client2.entity_by_isbn("9781849352826").await;
 
+            let mut rng = rand::thread_rng();
 
             match entity {
                 Ok(entity) => {
-                    let cover = book_cover::BookCover::new(entity);
-                    books_flowbox.insert(&cover, -1);
+                    let uid: String = (&mut rng).sample_iter(Alphanumeric).take(32).map(char::from).collect();
+                    dbqueries::add_book(&entity, &uid);
+                    debug!("Adding book with uid: {}", uid);
                 }
                 Err(error) => debug!("Failed to parse entity form ol: {}", error),
             };
 
             match entity2 {
                 Ok(entity2) => {
-                    let cover2 = book_cover::BookCover::new(entity2);
-                    books_flowbox.insert(&cover2, -1);
+                    let uid: String = (&mut rng).sample_iter(Alphanumeric).take(32).map(char::from).collect();
+                    dbqueries::add_book(&entity2, &uid);
+                    debug!("Adding book with uid: {}", uid);
                 }
                 Err(error) => debug!("Failed to parse entity form ol: {}", error),
             };
+
+            let books = dbqueries::books();
+
+            match books {
+                Ok(books) => {
+                    for book in books {
+                        let cover = book_cover::BookCover::new(book);
+                        books_flowbox.insert(&cover, -1);
+                    }
+                }
+                Err(error) => debug!("Failed to get books from database: {}", error),
+            }
         }));
     }
 }

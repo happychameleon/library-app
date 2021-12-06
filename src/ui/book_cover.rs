@@ -5,7 +5,7 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-use openlibrary_client::{Author, Entity};
+use crate::models::Book;
 
 mod imp {
     use super::*;
@@ -61,12 +61,12 @@ glib::wrapper! {
 }
 
 impl BookCover {
-    pub fn new(entity: Entity) -> Self {
+    pub fn new(book: Book) -> Self {
         let cover = glib::Object::new::<Self>(&[]).unwrap();
 
         let imp = imp::BookCover::from_instance(&cover);
-        imp.book_title.set_label(&entity.get_work_title());
-        imp.author_name.set_label(&entity.get_author_name());
+        imp.book_title.set_label(&book.title);
+        imp.author_name.set_label(&book.author.unwrap());
 
         cover
     }

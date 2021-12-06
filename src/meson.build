@@ -1,4 +1,5 @@
 global_conf = configuration_data()
+global_conf.set_quoted('NAME', name)
 global_conf.set_quoted('APP_ID', application_id)
 global_conf.set_quoted('PKGDATADIR', pkgdatadir)
 global_conf.set_quoted('PROFILE', profile)
@@ -25,6 +26,9 @@ rust_sources = files(
   'ui/book_form_page.rs',
   'ui/book_cover.rs',
   'ui/mod.rs',
+  'models.rs',
+  'schema.rs',
+  'database.rs',
   'application.rs',
   'config.rs',
   'main.rs',

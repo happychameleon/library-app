@@ -1,8 +1,17 @@
 mod application;
-#[rustfmt::skip]
 mod config;
+mod database;
+mod dbqueries;
+mod models;
+mod path;
+mod schema;
 mod ui;
 mod window;
+
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate diesel_migrations;
 
 use gettextrs::{gettext, LocaleCategory};
 use gtk::{gio, glib};

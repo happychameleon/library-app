@@ -11,6 +11,10 @@
         <attribute name="action">win.show-help-overlay</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">_Clear DB</attribute>
+        <attribute name="action">app.clear</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">_About GTK Rust Template</attribute>
         <attribute name="action">app.about</attribute>
       </item>
