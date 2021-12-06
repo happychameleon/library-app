@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use openlibrary_client::Entity;
 
 use crate::database;
-use crate::models::{Author, Book, Work, NewAuthor, NewBook, NewWork};
+use crate::models::{Author, Book, NewAuthor, NewBook, NewWork, Work};
 use crate::schema::{authors, books, works};
 
 pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
@@ -26,7 +26,10 @@ pub fn add_book(book: &Entity, uid: &String) {
         covers: &book.get_edition().covers[0].to_string(),
     };
 
-    diesel::insert_into(books::table).values(&book).execute(&connection).expect("Error saving book");
+    diesel::insert_into(books::table)
+        .values(&book)
+        .execute(&connection)
+        .expect("Error saving book");
 }
 
 pub fn work() -> Result<Vec<Work>, diesel::result::Error> {
@@ -46,7 +49,10 @@ pub fn add_work(entity: &Entity) {
         author: &entity.get_author_name(),
     };
 
-    diesel::insert_into(works::table).values(&work).execute(&connection).expect("Error saving book");
+    diesel::insert_into(works::table)
+        .values(&work)
+        .execute(&connection)
+        .expect("Error saving book");
 }
 
 pub fn author() -> Result<Vec<Author>, diesel::result::Error> {
@@ -65,5 +71,8 @@ pub fn add_author(entity: &Entity) {
         name: &entity.get_author_name(),
     };
 
-    diesel::insert_into(authors::table).values(&author).execute(&connection).expect("Error saving book");
+    diesel::insert_into(authors::table)
+        .values(&author)
+        .execute(&connection)
+        .expect("Error saving book");
 }

@@ -1,5 +1,5 @@
 use gettextrs::gettext;
-use log::{debug, info, error};
+use log::{debug, error, info};
 
 use glib::clone;
 use glib::GEnum;
@@ -17,8 +17,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
-use crate::window::BooksApplicationWindow;
 use crate::database;
+use crate::window::BooksApplicationWindow;
 
 #[derive(Display, Copy, Debug, Clone, EnumString, PartialEq, GEnum)]
 #[repr(u32)]
@@ -233,7 +233,12 @@ impl BooksApplication {
             Action::BackToBooks => {}
             Action::ClearDB => {
                 database::clear_db();
-                imp.window.get().unwrap().upgrade().unwrap().clear_books_page();
+                imp.window
+                    .get()
+                    .unwrap()
+                    .upgrade()
+                    .unwrap()
+                    .clear_books_page();
             }
         }
 

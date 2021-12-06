@@ -7,14 +7,14 @@ use gtk::subclass::prelude::*;
 use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
-use rand::prelude::*;
 use rand::distributions::Alphanumeric;
+use rand::prelude::*;
 
 use openlibrary_client::{Client, Edition};
 
 use crate::application::Action;
-use crate::ui::book_cover;
 use crate::dbqueries;
+use crate::ui::book_cover;
 
 mod imp {
     use super::*;
