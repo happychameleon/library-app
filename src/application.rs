@@ -233,6 +233,7 @@ impl BooksApplication {
             Action::BackToBooks => {}
             Action::ClearDB => {
                 database::clear_db();
+                imp.window.get().unwrap().upgrade().unwrap().clear_books_page();
             }
         }
 

@@ -75,6 +75,30 @@ impl BooksPage {
         self.setup_widget(sender);
     }
 
+    // Something does not quite work here, does not remove all children
+    pub fn clear_books_page(&self) {
+        let imp = imp::BooksPage::from_instance(self);
+        let books_flowbox: gtk::FlowBox = imp.books_flowbox.clone().downcast().unwrap();
+
+        let mut count = 0i32;
+        count = 0;
+
+        loop {
+            let book = books_flowbox.child_at_index(count);
+
+            match book {
+                Some(book) => {
+                    books_flowbox.remove(&book);
+                }
+                None => {
+                    break;
+                }
+            }
+
+            count += 1;
+        }
+    }
+
     fn setup_widget(&self, sender: Sender<Action>) {
         let imp = imp::BooksPage::from_instance(self);
         let main_context = MainContext::default();
