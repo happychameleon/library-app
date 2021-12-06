@@ -250,6 +250,12 @@ impl BooksApplicationWindow {
 
     }
 
+    pub fn clear_books_page(&self) {
+        let imp = imp::BooksApplicationWindow::from_instance(self);
+
+        imp.books_page.clear_books_page();
+    }
+
     pub fn set_view(&self, view: BooksView) {
         self.set_property("view", &view).unwrap()
     }

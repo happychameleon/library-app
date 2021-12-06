@@ -1,5 +1,5 @@
 use gettextrs::gettext;
-use log::{debug, info};
+use log::{debug, error, info};
 
 use glib::clone;
 use glib::GEnum;
@@ -8,7 +8,7 @@ use glib::{Receiver, Sender};
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
-use gtk_macros::action;
+use gtk_macros::*;
 
 use strum_macros::Display;
 use strum_macros::EnumString;
@@ -17,6 +17,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
+use crate::database;
 use crate::window::BooksApplicationWindow;
 
 #[derive(Display, Copy, Debug, Clone, EnumString, PartialEq, GEnum)]
@@ -37,6 +38,7 @@ pub enum Action {
 
     // Buttons
     BackToBooks,
+    ClearDB,
 }
 
 mod imp {
@@ -148,6 +150,9 @@ impl BooksApplication {
     }
 
     fn setup_gactions(&self) {
+        let imp = imp::BooksApplication::from_instance(self);
+        let sender = imp.sender.clone();
+
         // Quit
         let action_quit = gio::SimpleAction::new("quit", None);
         action_quit.connect_activate(clone!(@weak self as app => move |_, _| {
@@ -156,6 +161,15 @@ impl BooksApplication {
             app.quit();
         }));
         self.add_action(&action_quit);
+
+        // Clear DB
+        action!(
+            self,
+            "clear",
+            clone!(@strong sender => move |_,_| {
+                send!(sender, Action::ClearDB);
+            })
+        );
 
         // About
         let action_about = gio::SimpleAction::new("about", None);
@@ -217,6 +231,15 @@ impl BooksApplication {
                 imp.window.get().unwrap().upgrade().unwrap().set_view(view);
             }
             Action::BackToBooks => {}
+            Action::ClearDB => {
+                database::clear_db();
+                imp.window
+                    .get()
+                    .unwrap()
+                    .upgrade()
+                    .unwrap()
+                    .clear_books_page();
+            }
         }
 
         glib::Continue(true)

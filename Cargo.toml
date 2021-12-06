@@ -7,6 +7,7 @@ edition = "2018"
 [dependencies]
 log = "0.4"
 pretty_env_logger = "0.4"
+anyhow = "1.0.47"
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
 once_cell = "1.5"
 rand = "0.8.4"

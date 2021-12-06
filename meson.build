@@ -9,6 +9,7 @@ i18n = import('i18n')
 gnome = import('gnome')
 
 base_id = 'org.thievingraccoon.Books'
+name = 'Books'
 
 dependency('sqlite3', version: '>= 3.20')
 
