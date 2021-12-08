@@ -271,6 +271,9 @@ impl BooksApplicationWindow {
                 imp.add_book.set_visible(true);
             }
             BooksView::Books => {
+                let scan_book_page = imp.scan_book_page.get();
+                scan_book_page.stop();
+                
                 imp.stack.set_visible_child(&imp.books_page.get());
 
                 imp.view_switcher.set_visible(true);
@@ -280,7 +283,10 @@ impl BooksApplicationWindow {
             BooksView::Categories => {}
             BooksView::EnterBookDetails => {}
             BooksView::ScanBook => {
-                imp.stack.set_visible_child(&imp.scan_book_page.get());
+                let scan_book_page = imp.scan_book_page.get();
+                imp.stack.set_visible_child(&scan_book_page);
+
+                scan_book_page.start();
 
                 imp.view_switcher.set_visible(false);
                 imp.to_books.set_visible(true);
