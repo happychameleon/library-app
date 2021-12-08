@@ -9,12 +9,17 @@ use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 use rand::distributions::Alphanumeric;
 use rand::prelude::*;
+use futures::executor::block_on;
+
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use openlibrary_client::{Client, Edition};
 
 use crate::application::Action;
 use crate::dbqueries;
 use crate::ui::book_cover;
+use crate::models::Book;
 
 mod imp {
     use super::*;
@@ -97,6 +102,42 @@ impl BooksPage {
 
             count += 1;
         }
+    }
+
+    pub fn add_book(&self, isbn: &str){
+        let imp = imp::BooksPage::from_instance(self);
+
+        debug!("Calling add_book function");
+
+        let books_flowbox: gtk::FlowBox = imp.books_flowbox.clone().downcast().unwrap();
+
+        let client = Client::new();
+
+        let entity = block_on(client.entity_by_isbn(isbn));
+
+        let mut rng = rand::thread_rng();
+        let uid: String = (&mut rng).sample_iter(Alphanumeric).take(32).map(char::from).collect();
+
+        match entity {
+            Ok(entity) => {
+                dbqueries::add_book(&entity, &uid);
+                debug!("Adding book with uid: {}", uid);
+
+                let book = Book {
+                    id: 1,
+                    olid: entity.get_olid(),
+                    uid: uid,
+                    title: entity.get_edition().title,
+                    author: Some(entity.get_author_name()),
+                    work: Some(entity.get_work().key),
+                    covers: Some(entity.get_edition().covers[0].to_string()),
+                };
+
+                let cover = book_cover::BookCover::new(book);
+                books_flowbox.insert(&cover, -1);
+            }
+            Err(error) => debug!("Failed to parse entity form ol: {}", error),
+        };
     }
 
     fn setup_widget(&self, sender: Sender<Action>) {

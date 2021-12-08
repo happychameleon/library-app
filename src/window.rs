@@ -1,8 +1,11 @@
-use log::error;
+use log::{error, debug};
 
 use glib::Sender;
 use glib::{clone, Value};
 use glib::{GEnum, ParamSpec, ToValue};
+
+use rand::distributions::Alphanumeric;
+use rand::prelude::*;
 
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
@@ -221,10 +224,11 @@ impl BooksApplicationWindow {
         app.set_accels_for_action("win.to-books", &["Escape"]);
     }
 
-    pub fn show_code_detected(&self, code_content: &str) {
-        // let self_ = imp::Window::from_instance(self);
-        // self_.scanned_page.set_scanned_code(code_content);
-        // self_.deck.set_visible_child_name("code");
+    pub fn show_code_detected(&self, isbn: &str) {
+        let imp = imp::BooksApplicationWindow::from_instance(self);
+        imp.books_page.add_book(isbn);
+
+        debug!("Show code function compleated");
     }
 
     pub fn setup_widgets(&self, sender: Sender<Action>) {
