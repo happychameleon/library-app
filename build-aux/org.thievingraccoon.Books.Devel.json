@@ -57,7 +57,7 @@
                 "--with-doc=no",
                 "--disable-doc",
                 "--with-introspection=no",
-                "--enable-codes=qrcode"
+                "--enable-codes=ean"
             ],
             "sources": [{
                     "type": "archive",
