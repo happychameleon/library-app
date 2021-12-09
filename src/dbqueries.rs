@@ -31,7 +31,6 @@ pub fn add_book(book: &Entity, uid: &String) {
         book.get_edition().covers[0].to_string()
     };
 
-
     let book: NewBook = NewBook {
         olid: &book.get_olid(),
         uid: &uid,

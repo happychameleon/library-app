@@ -2167,7 +2167,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "openlibrary-client"
 version = "0.1.0"
-source = "git+https://github.com/happychameleon/olc-rs.git?rev=c678ab933e409fbc39cc9b5f8bb7e23d289738e8#c678ab933e409fbc39cc9b5f8bb7e23d289738e8"
+source = "git+https://github.com/happychameleon/olc-rs.git?rev=dd635d6c04409652a762227b975d9e5d76f1e20d#dd635d6c04409652a762227b975d9e5d76f1e20d"
 dependencies = [
  "anyhow",
  "async-std",

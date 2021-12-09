@@ -1,4 +1,4 @@
-use log::{error, debug};
+use log::{debug, error};
 
 use glib::Sender;
 use glib::{clone, Value};
@@ -277,7 +277,7 @@ impl BooksApplicationWindow {
             BooksView::Books => {
                 let scan_book_page = imp.scan_book_page.get();
                 scan_book_page.stop();
-                
+
                 imp.stack.set_visible_child(&imp.books_page.get());
 
                 imp.view_switcher.set_visible(true);
