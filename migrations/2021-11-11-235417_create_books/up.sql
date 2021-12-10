@@ -2,7 +2,8 @@
 CREATE TABLE `books` (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     `olid` TEXT NOT NULL,
-    `uid` TEXT UNIQUE NOT NULL,
+    `uid` TEXT UNIQUE NOT NULL, -- a unique edition specific random id
+    `isbn` TEXT,
     `title` TEXT NOT NULL,
     `author` TEXT,
     `work` TEXT,

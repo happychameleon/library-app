@@ -11,6 +11,7 @@ table! {
         id -> Integer,
         olid -> Text,
         uid -> Text,
+        isbn -> Nullable<Text>,
         title -> Text,
         author -> Nullable<Text>,
         work -> Nullable<Text>,
@@ -27,4 +28,8 @@ table! {
     }
 }
 
-allow_tables_to_appear_in_same_query!(authors, books, works,);
+allow_tables_to_appear_in_same_query!(
+    authors,
+    books,
+    works,
+);

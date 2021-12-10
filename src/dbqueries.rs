@@ -24,16 +24,15 @@ pub fn add_book(book: &Entity, uid: &String) {
     let len_comp: usize = 0;
 
     let cover = if book.get_edition().covers.len() == len_comp {
-        debug!("no covers for edition");
         String::from("")
     } else {
-        debug!("the if statment thinks there is a cover to be had");
         book.get_edition().covers[0].to_string()
     };
 
     let book: NewBook = NewBook {
         olid: &book.get_olid(),
         uid: &uid,
+        isbn: &book.get_edition().isbn13[0],
         title: &book.get_edition().title,
         author: &book.get_author_name(),
         work: &book.get_work().key,
