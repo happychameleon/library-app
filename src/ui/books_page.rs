@@ -14,7 +14,7 @@ use rand::prelude::*;
 use std::fs;
 use std::path::PathBuf;
 
-use openlibrary_client::{Client, Edition, CoverSize};
+use openlibrary_client::{Client, Edition, CoverSize, CoverKey};
 
 use crate::application::Action;
 use crate::dbqueries;
@@ -123,7 +123,7 @@ impl BooksPage {
         if !image_path.exists() {
             fs::create_dir_all(image_path.clone()).unwrap();
         }
-        //image_path.push(format!("{}.jpg", isbn));
+        image_path.push(format!("{}.jpg", isbn));
 
         let mut rng = rand::thread_rng();
         let uid: String = (&mut rng)
@@ -143,7 +143,7 @@ impl BooksPage {
                     None
                 } else {
                     debug!("Image cover path: {}", image_path.to_str().unwrap());
-                    match block_on(image_client.save_cover(CoverSize::L, String::from(image_path.to_str().unwrap()), String::from(isbn))) {
+                    match block_on(image_client.save_cover(CoverSize::L, String::from(image_path.to_str().unwrap()), CoverKey::ISBN(String::from(isbn)))) {
                         Ok(val) => debug!("All well"),
                         Err(error) => debug!("{}", error),
                     };
