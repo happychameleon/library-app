@@ -11,15 +11,16 @@ use once_cell::unsync::OnceCell;
 use rand::distributions::Alphanumeric;
 use rand::prelude::*;
 
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::fs;
+use std::path::PathBuf;
 
-use openlibrary_client::{Client, Edition};
+use openlibrary_client::{Client, Edition, CoverSize};
 
 use crate::application::Action;
 use crate::dbqueries;
 use crate::models::Book;
 use crate::ui::book_cover;
+use crate::path;
 
 mod imp {
     use super::*;
@@ -112,8 +113,17 @@ impl BooksPage {
         let books_flowbox: gtk::FlowBox = imp.books_flowbox.clone().downcast().unwrap();
 
         let client = Client::new();
+        let image_client = Client::new();
 
         let entity = block_on(client.entity_by_isbn(isbn));
+
+
+        let mut image_path = path::DATA.clone();
+        image_path.push(format!("covers/"));
+        if !image_path.exists() {
+            fs::create_dir_all(image_path.clone()).unwrap();
+        }
+        //image_path.push(format!("{}.jpg", isbn));
 
         let mut rng = rand::thread_rng();
         let uid: String = (&mut rng)
@@ -130,10 +140,13 @@ impl BooksPage {
                 let len_comp: usize = 0;
 
                 let cover = if entity.get_edition().covers.len() == len_comp {
-                    debug!("no covers for edition");
                     None
                 } else {
-                    debug!("the if statment thinks there is a cover to be had");
+                    debug!("Image cover path: {}", image_path.to_str().unwrap());
+                    match block_on(image_client.save_cover(CoverSize::L, String::from(image_path.to_str().unwrap()), String::from(isbn))) {
+                        Ok(val) => debug!("All well"),
+                        Err(error) => debug!("{}", error),
+                    };
                     Some(entity.get_edition().covers[0].to_string())
                 };
 
@@ -141,6 +154,7 @@ impl BooksPage {
                     id: 1,
                     olid: entity.get_olid(),
                     uid: uid,
+                    isbn: Some(String::from(isbn)),
                     title: entity.get_edition().title,
                     author: Some(entity.get_author_name()),
                     work: Some(entity.get_work().key),

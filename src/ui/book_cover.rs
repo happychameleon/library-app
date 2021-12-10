@@ -1,3 +1,5 @@
+use log::debug;
+
 use glib::{clone, Sender};
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
@@ -6,6 +8,7 @@ use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
 use crate::models::Book;
+use crate::path;
 
 mod imp {
     use super::*;
@@ -65,6 +68,17 @@ impl BookCover {
         let cover = glib::Object::new::<Self>(&[]).unwrap();
 
         let imp = imp::BookCover::from_instance(&cover);
+
+        match book.covers {
+            Some(cover) => {
+            let mut image_path = path::DATA.clone();
+            image_path.push(format!("covers/{}.jpg", book.isbn.unwrap()));
+            imp.cover_image.set_from_file(image_path.to_str().unwrap());
+            imp.cover_image.set_pixel_size(200)
+        }
+            None => {}
+        }
+
         imp.book_title.set_label(&book.title);
         imp.author_name.set_label(&book.author.unwrap());
 
