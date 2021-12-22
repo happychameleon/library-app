@@ -23,6 +23,7 @@ rust_sources = files(
   'ui/books_page.rs',
   'ui/authors_page.rs',
   'ui/scan_book_page.rs',
+  'ui/camera_paintable.rs',
   'ui/book_form_page.rs',
   'ui/book_cover.rs',
   'ui/mod.rs',

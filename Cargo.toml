@@ -14,12 +14,21 @@ rand = "0.8.4"
 diesel = { version = "1.4.8", features = ["sqlite", "r2d2"] }
 diesel_migrations = {version = "1.4", features = ["sqlite"]}
 dotenv = "0.15.0"
+ashpd =  {git = "https://github.com/bilelmoussaoui/ashpd", features=["feature_gtk4", "feature_pipewire"], rev="cef76afa7d5e5d6e3014004ec05a91db1a90cdf4"}
+futures = "0.3"
 
-strum = "0.20.0"
-strum_macros = "0.20.1"
+gst = { version = "0.17", package = "gstreamer" }
+gst_base = { version = "0.17", package = "gstreamer-base" }
+gst_video = { version = "0.17", package = "gstreamer-video" }
 
-gtk = {version = "0.3", package = "gtk4"}
+gtk = { package = "gtk4", version = "0.3" }
 gtk-macros = "0.3.0"
 adw = { version = "0.1.0-alpha", package = "libadwaita" }
 
-openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", rev="c678ab933e409fbc39cc9b5f8bb7e23d289738e8" }
+strum = "0.20.0"
+strum_macros = "0.20.1"
+tracing = "0.1"
+tracing-subscriber = "0.2"
+zbar-rust = "0.0"
+
+openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", rev="f920f6833bf55541b89b43f95d1c43da79665554" }

@@ -11,6 +11,7 @@ table! {
         id -> Integer,
         olid -> Text,
         uid -> Text,
+        isbn -> Nullable<Text>,
         title -> Text,
         author -> Nullable<Text>,
         work -> Nullable<Text>,

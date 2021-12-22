@@ -1,3 +1,5 @@
+use log::debug;
+
 use diesel::prelude::*;
 
 use openlibrary_client::Entity;
@@ -17,13 +19,24 @@ pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
 pub fn add_book(book: &Entity, uid: &String) {
     let connection = database::connection().get().unwrap();
 
+    println!("debug cover len {}", book.get_edition().covers.len());
+
+    let len_comp: usize = 0;
+
+    let cover = if book.get_edition().covers.len() == len_comp {
+        String::from("")
+    } else {
+        book.get_edition().covers[0].to_string()
+    };
+
     let book: NewBook = NewBook {
         olid: &book.get_olid(),
         uid: &uid,
+        isbn: &book.get_edition().isbn13[0],
         title: &book.get_edition().title,
         author: &book.get_author_name(),
         work: &book.get_work().key,
-        covers: &book.get_edition().covers[0].to_string(),
+        covers: &cover,
     };
 
     diesel::insert_into(books::table)

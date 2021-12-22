@@ -1,5 +1,6 @@
 use log::debug;
 
+use futures::executor::block_on;
 use glib::PRIORITY_DEFAULT;
 use glib::{clone, MainContext, Sender};
 use gtk::prelude::*;
@@ -10,10 +11,15 @@ use once_cell::unsync::OnceCell;
 use rand::distributions::Alphanumeric;
 use rand::prelude::*;
 
-use openlibrary_client::{Client, Edition};
+use std::fs;
+use std::path::PathBuf;
+
+use openlibrary_client::{Client, CoverKey, CoverSize, Edition};
 
 use crate::application::Action;
 use crate::dbqueries;
+use crate::models::Book;
+use crate::path;
 use crate::ui::book_cover;
 
 mod imp {
@@ -99,6 +105,72 @@ impl BooksPage {
         }
     }
 
+    pub fn add_book(&self, isbn: &str) {
+        let imp = imp::BooksPage::from_instance(self);
+
+        debug!("Calling add_book function");
+
+        let books_flowbox: gtk::FlowBox = imp.books_flowbox.clone().downcast().unwrap();
+
+        let client = Client::new();
+        let image_client = Client::new();
+
+        let entity = block_on(client.entity_by_isbn(isbn));
+
+        let mut image_path = path::DATA.clone();
+        image_path.push(format!("covers/"));
+        if !image_path.exists() {
+            fs::create_dir_all(image_path.clone()).unwrap();
+        }
+        image_path.push(format!("{}.jpg", isbn));
+
+        let mut rng = rand::thread_rng();
+        let uid: String = (&mut rng)
+            .sample_iter(Alphanumeric)
+            .take(32)
+            .map(char::from)
+            .collect();
+
+        match entity {
+            Ok(entity) => {
+                dbqueries::add_book(&entity, &uid);
+                debug!("Adding book with uid: {}", uid);
+
+                let len_comp: usize = 0;
+
+                let cover = if entity.get_edition().covers.len() == len_comp {
+                    None
+                } else {
+                    debug!("Image cover path: {}", image_path.to_str().unwrap());
+                    match block_on(image_client.save_cover(
+                        CoverSize::L,
+                        String::from(image_path.to_str().unwrap()),
+                        CoverKey::ISBN(String::from(isbn)),
+                    )) {
+                        Ok(val) => debug!("All well"),
+                        Err(error) => debug!("{}", error),
+                    };
+                    Some(entity.get_edition().covers[0].to_string())
+                };
+
+                let book = Book {
+                    id: 1,
+                    olid: entity.get_olid(),
+                    uid: uid,
+                    isbn: Some(String::from(isbn)),
+                    title: entity.get_edition().title,
+                    author: Some(entity.get_author_name()),
+                    work: Some(entity.get_work().key),
+                    covers: cover,
+                };
+
+                let cover = book_cover::BookCover::new(book);
+                books_flowbox.insert(&cover, -1);
+            }
+            Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
+        };
+    }
+
     fn setup_widget(&self, sender: Sender<Action>) {
         let imp = imp::BooksPage::from_instance(self);
         let main_context = MainContext::default();
@@ -106,31 +178,6 @@ impl BooksPage {
         let books_flowbox: gtk::FlowBox = imp.books_flowbox.clone().downcast().unwrap();
 
         main_context.spawn_local(clone!(@weak books_flowbox => async move {
-            let client = Client::new();
-            let client2 = Client::new();
-
-            let entity = client.entity_by_isbn("9781849352826").await;
-            let entity2 = client2.entity_by_isbn("9781849352826").await;
-
-            let mut rng = rand::thread_rng();
-
-            match entity {
-                Ok(entity) => {
-                    let uid: String = (&mut rng).sample_iter(Alphanumeric).take(32).map(char::from).collect();
-                    dbqueries::add_book(&entity, &uid);
-                    debug!("Adding book with uid: {}", uid);
-                }
-                Err(error) => debug!("Failed to parse entity form ol: {}", error),
-            };
-
-            match entity2 {
-                Ok(entity2) => {
-                    let uid: String = (&mut rng).sample_iter(Alphanumeric).take(32).map(char::from).collect();
-                    dbqueries::add_book(&entity2, &uid);
-                    debug!("Adding book with uid: {}", uid);
-                }
-                Err(error) => debug!("Failed to parse entity form ol: {}", error),
-            };
 
             let books = dbqueries::books();
 
