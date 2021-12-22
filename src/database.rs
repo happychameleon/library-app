@@ -18,7 +18,7 @@ use once_cell::sync::Lazy;
 
 use crate::config;
 use crate::path;
-use crate::schema::{books, authors, works};
+use crate::schema::{authors, books, works};
 
 type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 

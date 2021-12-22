@@ -1,8 +1,11 @@
-use log::error;
+use log::{debug, error};
 
 use glib::Sender;
 use glib::{clone, Value};
 use glib::{GEnum, ParamSpec, ToValue};
+
+use rand::distributions::Alphanumeric;
+use rand::prelude::*;
 
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
@@ -85,6 +88,25 @@ mod imp {
 
         fn class_init(klass: &mut Self::Class) {
             Self::bind_template(klass);
+
+            klass.install_action("win.back", None, move |obj, _, _| {
+                let self_ = imp::BooksApplicationWindow::from_instance(&obj);
+                self_.stack.set_visible_child_name("main");
+
+                if self_
+                    .stack
+                    .visible_child_name()
+                    .map(|x| x == "scan")
+                    .unwrap_or(false)
+                {
+                    self_.scan_book_page.start();
+                }
+            });
+
+            klass.install_action("win.scan-qr", None, move |obj, _, _| {
+                let self_ = imp::BooksApplicationWindow::from_instance(&obj);
+                self_.stack.set_visible_child_name("scan");
+            });
         }
 
         // You must call `Widget`'s `init_template()` within `instance_init()`.
@@ -202,12 +224,32 @@ impl BooksApplicationWindow {
         app.set_accels_for_action("win.to-books", &["Escape"]);
     }
 
+    pub fn show_code_detected(&self, isbn: &str) {
+        let imp = imp::BooksApplicationWindow::from_instance(self);
+        imp.books_page.add_book(isbn);
+
+        debug!("Show code function compleated");
+    }
+
     pub fn setup_widgets(&self, sender: Sender<Action>) {
         let imp = imp::BooksApplicationWindow::from_instance(self);
 
         imp.view_switcher.set_stack(Some(&imp.stack.get()));
 
         imp.books_page.init(sender.clone());
+
+        imp.scan_book_page
+            .connect_local(
+                "code-detected",
+                false,
+                glib::clone!(@weak self as win => @default-return None, move |args| {
+                    let code = args.get(1).unwrap().get::<String>().unwrap();
+                    win.show_code_detected(&code);
+
+                    None
+                }),
+            )
+            .unwrap();
     }
 
     pub fn clear_books_page(&self) {
@@ -233,6 +275,9 @@ impl BooksApplicationWindow {
                 imp.add_book.set_visible(true);
             }
             BooksView::Books => {
+                let scan_book_page = imp.scan_book_page.get();
+                scan_book_page.stop();
+
                 imp.stack.set_visible_child(&imp.books_page.get());
 
                 imp.view_switcher.set_visible(true);
@@ -242,7 +287,10 @@ impl BooksApplicationWindow {
             BooksView::Categories => {}
             BooksView::EnterBookDetails => {}
             BooksView::ScanBook => {
-                imp.stack.set_visible_child(&imp.scan_book_page.get());
+                let scan_book_page = imp.scan_book_page.get();
+                imp.stack.set_visible_child(&scan_book_page);
+
+                scan_book_page.start();
 
                 imp.view_switcher.set_visible(false);
                 imp.to_books.set_visible(true);

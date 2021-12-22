@@ -9,6 +9,7 @@ pub struct Book {
     pub id: i32,
     pub olid: String,
     pub uid: String,
+    pub isbn: Option<String>,
     pub title: String,
     pub author: Option<String>,
     pub work: Option<String>,
@@ -35,6 +36,7 @@ pub struct Work {
 pub struct NewBook<'a> {
     pub olid: &'a str,
     pub uid: &'a str,
+    pub isbn: &'a str,
     pub title: &'a str,
     pub author: &'a str,
     pub work: &'a str,
