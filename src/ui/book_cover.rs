@@ -71,11 +71,11 @@ impl BookCover {
 
         match book.covers {
             Some(cover) => {
-            let mut image_path = path::DATA.clone();
-            image_path.push(format!("covers/{}.jpg", book.isbn.unwrap()));
-            imp.cover_image.set_from_file(image_path.to_str().unwrap());
-            imp.cover_image.set_pixel_size(200)
-        }
+                let mut image_path = path::DATA.clone();
+                image_path.push(format!("covers/{}.jpg", book.isbn.unwrap()));
+                imp.cover_image.set_from_file(image_path.to_str().unwrap());
+                imp.cover_image.set_pixel_size(200)
+            }
             None => {}
         }
 

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--copyright: https://gitlab.gnome.org/World/decoder/-/blob/8f2722b8ef1808995773e8e96ffca0a1b4245d62/data/resources/ui/camera_page.ui-->
 <interface>
   <template class="ScanBookPage" parent="AdwBin">
     <child>
@@ -50,25 +51,6 @@
             <property name="name">stream</property>
             <property name="child">
               <object class="GtkOverlay">
-                <child type="overlay">
-                  <object class="GtkButton">
-                    <property name="action-name">camera.screenshot-scan</property>
-                    <property name="icon-name">qrscanner-symbolic</property>
-                    <property name="tooltip-text" translatable="yes">Capture From a Screenshot</property>
-                    <property name="width-request">44</property>
-                    <property name="height-request">44</property>
-                    <property name="hexpand">True</property>
-                    <property name="valign">end</property>
-                    <property name="halign">end</property>
-                    <property name="margin-start">18</property>
-                    <property name="margin-end">18</property>
-                    <property name="margin-bottom">18</property>
-                    <style>
-                      <class name="osd" />
-                      <class name="circular-button" />
-                    </style>
-                  </object>
-                </child>
                 <child>
                   <object class="GtkPicture" id="picture">
                     <property name="hexpand">True</property>
@@ -84,3 +66,4 @@
     </child>
   </template>
 </interface>
+  

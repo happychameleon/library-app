@@ -14,13 +14,13 @@ use rand::prelude::*;
 use std::fs;
 use std::path::PathBuf;
 
-use openlibrary_client::{Client, Edition, CoverSize, CoverKey};
+use openlibrary_client::{Client, CoverKey, CoverSize, Edition};
 
 use crate::application::Action;
 use crate::dbqueries;
 use crate::models::Book;
-use crate::ui::book_cover;
 use crate::path;
+use crate::ui::book_cover;
 
 mod imp {
     use super::*;
@@ -117,7 +117,6 @@ impl BooksPage {
 
         let entity = block_on(client.entity_by_isbn(isbn));
 
-
         let mut image_path = path::DATA.clone();
         image_path.push(format!("covers/"));
         if !image_path.exists() {
@@ -143,7 +142,11 @@ impl BooksPage {
                     None
                 } else {
                     debug!("Image cover path: {}", image_path.to_str().unwrap());
-                    match block_on(image_client.save_cover(CoverSize::L, String::from(image_path.to_str().unwrap()), CoverKey::ISBN(String::from(isbn)))) {
+                    match block_on(image_client.save_cover(
+                        CoverSize::L,
+                        String::from(image_path.to_str().unwrap()),
+                        CoverKey::ISBN(String::from(isbn)),
+                    )) {
                         Ok(val) => debug!("All well"),
                         Err(error) => debug!("{}", error),
                     };
