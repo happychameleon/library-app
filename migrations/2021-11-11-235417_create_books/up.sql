@@ -15,7 +15,7 @@ CREATE TABLE `books` (
     `lccn` TEXT, -- pub lccn: Vec<String>,
     `ocaid` TEXT,
     `oclc_numbers` TEXT, -- pub oclc_numbers: Vec<String>,
-    `covers` TEXT -- pub covers: Vec<isize>,
+    `covers` TEXT, -- pub covers: Vec<isize>,
     `links` TEXT,
     `languages` TEXT, -- pub languages: Vec<Language>,
     `by_statement` TEXT,
@@ -50,16 +50,49 @@ CREATE TABLE `books` (
     `ia_box_id` TEXT, -- pub ia_box_id: Vec<String>,
 );
 
-
 CREATE TABLE `authors` (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     `olid` TEXT NOT NULL,
-    `name` TEXT NOT NULL
+    `name` TEXT NOT NULL,
+    `type_field` TEXT NOT NULL, -- pub type_field: Type,
+    `alternate_names` TEXT, -- pub alternate_names: Vec<String>,
+    `bio` TEXT, -- pub bio: Bio,
+    `birth_date` TEXT,
+    `death_date` TEXT,
+    `location` TEXT, -- pub location: Location, //No Idea What this looks like in real
+    `date` TEXT, -- pub date: Date, //No Idea What this looks like in real
+    `entity_type` TEXT, -- pub entity_type: EntityType, //No Idea What this looks like in real
+    `fuller_name` TEXT, -- pub fuller_name: FullerName, //No Idea What this looks like in real
+    `personal_name` TEXT, -- pub personal_name: String,
+    `title` TEXT,
+    `photos` TEXT, -- pub photos: Vec<usize>,
+    `links` TEXT, -- pub links: Vec<Link>,
+    `remote_ids` TEXT, -- pub remote_ids: RemoteIds,
+    `wikipedia` TEXT, -- pub wikipedia: Wikipedia, //No Idea What this looks like in real
+    `revision` TEXT NOT NULL, -- pub revision: usize,
+    `latest_revision` TEXT, -- pub latest_revision: usize,
+    `created` TEXT, -- pub created: Created,
+    `last_modified` TEXT NOT NULL, -- pub last_modified: LastModified,
 );
 
 CREATE TABLE `works` (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     `olid` TEXT NOT NULL,
     `title` TEXT NOT NULL,
-    `author` TEXT
+    `subtitle` TEXT,
+    `type_field` TEXT NOT NULL, -- pub type_field: Type,
+    `authors` TEXT, -- pub authors: Vec<Authors>,
+    `covers` TEXT, -- pub covers: Vec<isize>,
+    `links` TEXT, -- pub links: Vec<Link>,
+    `id` TEXT, -- pub id: Id, //No Idea What this looks like in real
+    `lc_classifications` TEXT, -- pub lc_classifications: Vec<String>,
+    `subjects` TEXT, -- pub subjects: Vec<String>,
+    `first_publish_date` TEXT,
+    `description` TEXT, -- pub description: Description, //It looks like OL59863W a discription type instead of a string
+    `notes` TEXT,
+    `revision` TEXT NOT NULL, -- pub revision: usize,
+    `latest_revision` TEXT, -- pub latest_revision: usize,
+    `created` TEXT, -- pub created: Created,
+    `last_modified` TEXT NOT NULL, -- pub last_modified: LastModified,
 );
+    
