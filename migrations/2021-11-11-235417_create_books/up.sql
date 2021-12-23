@@ -47,7 +47,7 @@ CREATE TABLE `books` (
     `created` TEXT, -- pub created: Created,
     `last_modified` TEXT, -- pub last_modified: LastModified,
     `isbn_invalid` TEXT, -- pub isbn_invalid: Vec<String>,
-    `ia_box_id` TEXT, -- pub ia_box_id: Vec<String>,
+    `ia_box_id` TEXT -- pub ia_box_id: Vec<String>,
 );
 
 CREATE TABLE `authors` (
@@ -72,7 +72,7 @@ CREATE TABLE `authors` (
     `revision` TEXT NOT NULL, -- pub revision: usize,
     `latest_revision` TEXT, -- pub latest_revision: usize,
     `created` TEXT, -- pub created: Created,
-    `last_modified` TEXT NOT NULL, -- pub last_modified: LastModified,
+    `last_modified` TEXT NOT NULL -- pub last_modified: LastModified,
 );
 
 CREATE TABLE `works` (
@@ -84,7 +84,7 @@ CREATE TABLE `works` (
     `authors` TEXT, -- pub authors: Vec<Authors>,
     `covers` TEXT, -- pub covers: Vec<isize>,
     `links` TEXT, -- pub links: Vec<Link>,
-    `id` TEXT, -- pub id: Id, //No Idea What this looks like in real
+    `id_work` TEXT, -- pub id: Id, //No Idea What this looks like in real
     `lc_classifications` TEXT, -- pub lc_classifications: Vec<String>,
     `subjects` TEXT, -- pub subjects: Vec<String>,
     `first_publish_date` TEXT,
@@ -93,6 +93,6 @@ CREATE TABLE `works` (
     `revision` TEXT NOT NULL, -- pub revision: usize,
     `latest_revision` TEXT, -- pub latest_revision: usize,
     `created` TEXT, -- pub created: Created,
-    `last_modified` TEXT NOT NULL, -- pub last_modified: LastModified,
+    `last_modified` TEXT NOT NULL -- pub last_modified: LastModified,
 );
     
