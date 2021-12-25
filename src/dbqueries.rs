@@ -101,7 +101,21 @@ pub fn add_work(entity: &Entity) {
     let work: NewWork = NewWork {
         olid: &entity.get_work().key,
         title: &entity.get_work().title,
-        authors: &entity.get_author_name(),
+        subtitle: Some(&entity.get_work().subtitle),
+        type_field: &serde_json::to_string(&entity.get_work().type_field).unwrap(),
+        authors: Some(&serde_json::to_string(&entity.get_work().authors).unwrap()),
+        covers: Some(&serde_json::to_string(&entity.get_work().covers).unwrap()),
+        links: Some(&serde_json::to_string(&entity.get_work().links).unwrap()),
+        id_work: Some(&serde_json::to_string(&entity.get_work().id).unwrap()),
+        lc_classifications: Some(&serde_json::to_string(&entity.get_work().lc_classifications).unwrap()),
+        subjects: Some(&serde_json::to_string(&entity.get_work().subjects).unwrap()),
+        first_publish_date: Some(&entity.get_work().first_publish_date),
+        description: Some(&serde_json::to_string(&entity.get_work().description).unwrap()),
+        notes: Some(&entity.get_work().notes),
+        revision: &serde_json::to_string(&entity.get_work().revision).unwrap(), //usize instead of string
+        latest_revision: Some(&serde_json::to_string(&entity.get_work().latest_revision).unwrap()),
+        created: Some(&serde_json::to_string(&entity.get_work().created).unwrap()),
+        last_modified: &serde_json::to_string(&entity.get_work().last_modified).unwrap(),
     };
 
     diesel::insert_into(works::table)
@@ -124,6 +138,25 @@ pub fn add_author(entity: &Entity) {
     let author: NewAuthor = NewAuthor {
         olid: &entity.get_author().key,
         name: &entity.get_author_name(),
+        type_field: &serde_json::to_string(&entity.get_author().type_field).unwrap(),
+        alternate_names: Some(&serde_json::to_string(&entity.get_author().alternate_names).unwrap()),
+        bio: Some(&serde_json::to_string(&entity.get_author().bio).unwrap()),
+        birth_date: Some(&entity.get_author().birth_date),
+        death_date: Some(&entity.get_author().death_date),
+        location: Some(&serde_json::to_string(&entity.get_author().location).unwrap()),
+        date: Some(&serde_json::to_string(&entity.get_author().date).unwrap()),
+        entity_type: Some(&serde_json::to_string(&entity.get_author().entity_type).unwrap()),
+        fuller_name: Some(&serde_json::to_string(&entity.get_author().fuller_name).unwrap()),
+        personal_name: Some(&entity.get_author().personal_name),
+        title: Some(&entity.get_author().title),
+        photos: Some(&serde_json::to_string(&entity.get_author().photos).unwrap()),
+        links: Some(&serde_json::to_string(&entity.get_author().links).unwrap()),
+        remote_ids: Some(&serde_json::to_string(&entity.get_author().remote_ids).unwrap()),
+        wikipedia: Some(&serde_json::to_string(&entity.get_author().wikipedia).unwrap()),
+        revision: &serde_json::to_string(&entity.get_author().revision).unwrap(),
+        latest_revision: Some(&serde_json::to_string(&entity.get_author().latest_revision).unwrap()),
+        created: Some(&serde_json::to_string(&entity.get_author().created).unwrap()),
+        last_modified: &serde_json::to_string(&entity.get_author().last_modified).unwrap(),
     };
 
     diesel::insert_into(authors::table)
@@ -131,3 +164,4 @@ pub fn add_author(entity: &Entity) {
         .execute(&connection)
         .expect("Error saving book");
 }
+
