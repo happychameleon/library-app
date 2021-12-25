@@ -29,14 +29,56 @@ pub fn add_book(book: &Entity, uid: &String) {
         book.get_edition().covers[0].to_string()
     };
 
+
+
     let book: NewBook = NewBook {
-        olid: &book.get_olid(),
         uid: &uid,
-        isbn: &book.get_edition().isbn13[0],
+        olid: &book.get_olid(),
         title: &book.get_edition().title,
-        author: &book.get_author_name(),
-        work: &book.get_work().key,
-        covers: &cover,
+        full_title: Some(&book.get_edition().full_title),
+        subtitle: Some(&book.get_edition().subtitle),
+        type_field: Some(&serde_json::to_string(&book.get_edition().type_field).unwrap()),
+        authors: Some(&book.get_author_name()),
+        works: Some(&book.get_work().key),
+        identifiers: Some(&serde_json::to_string(&book.get_edition().identifiers).unwrap()),
+        isbn10: Some(&book.get_edition().isbn10[0]),
+        isbn13: Some(&book.get_edition().isbn13[0]),
+        lccn: Some(&book.get_edition().lccn[0]),
+        ocaid: Some(&book.get_edition().ocaid),
+        oclc_numbers: Some(&book.get_edition().oclc_numbers[0]),
+        covers: Some(&cover),
+        links: Some(&book.get_edition().links),
+        languages: Some(&serde_json::to_string(&book.get_edition().languages[0]).unwrap()),
+        by_statement: Some(&book.get_edition().by_statement),
+        weight: Some(&serde_json::to_string(&book.get_edition().weight).unwrap()),
+        edition_name: Some(&book.get_edition().edition_name),
+        number_of_pages: Some(&serde_json::to_string(&book.get_edition().number_of_pages).unwrap()),
+        pagination: Some(&book.get_edition().pagination),
+        physical_dimensions: Some(&serde_json::to_string(&book.get_edition().physical_dimensions).unwrap()),
+        physical_format: Some(&book.get_edition().physical_format),
+        publish_country: Some(&book.get_edition().publish_country),
+        publish_date: Some(&book.get_edition().publish_date),
+        publish_places: Some(&book.get_edition().publish_places[0]),
+        publishers: Some(&book.get_edition().publishers[0]),
+        contributions: Some(&book.get_edition().contributions[0]),
+        dewey_decimal_class: Some(&book.get_edition().dewey_decimal_class[0]),
+        genres: Some(&book.get_edition().genres[0]),
+        lc_classifications: Some(&book.get_edition().lc_classifications[0]),
+        other_titles: Some(&book.get_edition().other_titles[0]),
+        series: Some(&book.get_edition().series[0]),
+        source_records: Some(&book.get_edition().source_records[0]),
+        subjects: Some(&book.get_edition().subjects[0]),
+        work_titles: Some(&book.get_edition().work_titles),
+        table_of_contents: Some(&serde_json::to_string(&book.get_edition().table_of_contents).unwrap()),
+        description: Some(&book.get_edition().description),
+        first_sentence: Some(&book.get_edition().first_sentence),
+        notes: Some(&serde_json::to_string(&book.get_edition().notes).unwrap()),
+        revision: Some(&serde_json::to_string(&book.get_edition().revision).unwrap()),
+        latest_revision: Some(&serde_json::to_string(&book.get_edition().latest_revision).unwrap()),
+        created: Some(&serde_json::to_string(&book.get_edition().created).unwrap()),
+        last_modified: Some(&serde_json::to_string(&book.get_edition().last_modified).unwrap()),
+        isbn_invalid: Some(&book.get_edition().isbn_invalid[0]),
+        ia_box_id: Some(&book.get_edition().ia_box_id[0]),
     };
 
     diesel::insert_into(books::table)
@@ -59,7 +101,7 @@ pub fn add_work(entity: &Entity) {
     let work: NewWork = NewWork {
         olid: &entity.get_work().key,
         title: &entity.get_work().title,
-        author: &entity.get_author_name(),
+        authors: &entity.get_author_name(),
     };
 
     diesel::insert_into(works::table)

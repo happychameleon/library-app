@@ -17,6 +17,7 @@ dotenv = "0.15.0"
 ashpd =  {git = "https://github.com/bilelmoussaoui/ashpd", features=["feature_gtk4", "feature_pipewire"], rev="cef76afa7d5e5d6e3014004ec05a91db1a90cdf4"}
 futures = "0.3"
 serde = "1.0.132"
+serde_json = "1.0.73"
 
 gst = { version = "0.17", package = "gstreamer" }
 gst_base = { version = "0.17", package = "gstreamer-base" }
