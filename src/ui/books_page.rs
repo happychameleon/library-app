@@ -153,18 +153,7 @@ impl BooksPage {
                     Some(entity.get_edition().covers[0].to_string())
                 };
 
-                let book = Book {
-                    id: 1,
-                    olid: entity.get_olid(),
-                    uid: uid,
-                    isbn: Some(String::from(isbn)),
-                    title: entity.get_edition().title,
-                    author: Some(entity.get_author_name()),
-                    work: Some(entity.get_work().key),
-                    covers: cover,
-                };
-
-                let cover = book_cover::BookCover::new(book);
+                let cover = book_cover::BookCover::new(dbqueries::book(&uid).unwrap());
                 books_flowbox.insert(&cover, -1);
             }
             Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),

@@ -72,7 +72,7 @@ impl BookCover {
         match book.covers {
             Some(cover) => {
                 let mut image_path = path::DATA.clone();
-                image_path.push(format!("covers/{}.jpg", book.isbn.unwrap()));
+                image_path.push(format!("covers/{}.jpg", book.isbn13.unwrap()));
                 imp.cover_image.set_from_file(image_path.to_str().unwrap());
                 imp.cover_image.set_pixel_size(200)
             }
@@ -80,7 +80,7 @@ impl BookCover {
         }
 
         imp.book_title.set_label(&book.title);
-        imp.author_name.set_label(&book.author.unwrap());
+        imp.author_name.set_label(&book.authors.unwrap());
 
         cover
     }
