@@ -16,6 +16,14 @@ pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
     Ok(books)
 }
 
+pub fn book(uid: &String) -> Result<Book, diesel::result::Error> {
+    let connection = database::connection().get().unwrap();
+
+    let book = books::dsl::books.filter(books::dsl::uid.like(uid)).first(&connection)?;
+
+    Ok(book)
+}
+
 pub fn add_book(book: &Entity, uid: &String) {
     let connection = database::connection().get().unwrap();
 
