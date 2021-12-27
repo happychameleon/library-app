@@ -136,22 +136,22 @@ impl BooksPage {
                 dbqueries::add_book(&entity, &uid);
                 debug!("Adding book with uid: {}", uid);
 
-                let len_comp: usize = 0;
+                // let len_comp: usize = 0;
 
-                let cover = if entity.get_edition().covers.len() == len_comp {
-                    None
-                } else {
-                    debug!("Image cover path: {}", image_path.to_str().unwrap());
-                    match block_on(image_client.save_cover(
-                        CoverSize::L,
-                        String::from(image_path.to_str().unwrap()),
-                        CoverKey::ISBN(String::from(isbn)),
-                    )) {
-                        Ok(val) => debug!("All well"),
-                        Err(error) => debug!("{}", error),
-                    };
-                    Some(entity.get_edition().covers[0].to_string())
-                };
+                // let cover = if entity.get_edition().covers.len() == len_comp {
+                //     None
+                // } else {
+                //     debug!("Image cover path: {}", image_path.to_str().unwrap());
+                //     match block_on(image_client.save_cover(
+                //         CoverSize::L,
+                //         String::from(image_path.to_str().unwrap()),
+                //         CoverKey::ISBN(String::from(isbn)),
+                //     )) {
+                //         Ok(val) => debug!("All well"),
+                //         Err(error) => debug!("{}", error),
+                //     };
+                //     Some(entity.get_edition().covers[0].to_string())
+                // };
 
                 let cover = book_cover::BookCover::new(dbqueries::book(&uid).unwrap());
                 books_flowbox.insert(&cover, -1);
