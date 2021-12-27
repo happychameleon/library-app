@@ -18,6 +18,7 @@ ashpd =  {git = "https://github.com/bilelmoussaoui/ashpd", features=["feature_gt
 futures = "0.3"
 serde = "1.0.132"
 serde_json = "1.0.73"
+wikibase = { git = "https://gitlab.com/tobias47n9e/wikibase_rs", rev = "90545230d4d7bbd1f56b0d5fa6d3add431daf553" }
 
 gst = { version = "0.17", package = "gstreamer" }
 gst_base = { version = "0.17", package = "gstreamer-base" }
@@ -33,4 +34,4 @@ tracing = "0.1"
 tracing-subscriber = "0.2"
 zbar-rust = "0.0"
 
-openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", rev="f920f6833bf55541b89b43f95d1c43da79665554" }
+openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", rev="3b28d245c10e47bd510e5f9adc351b349cad0fa5" }
