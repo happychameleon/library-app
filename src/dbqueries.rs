@@ -297,27 +297,80 @@ pub fn author() -> Result<Vec<Author>, diesel::result::Error> {
 pub fn add_author(entity: &Entity) {
     let connection = database::connection().get().unwrap();
 
+    let alternate_names = match entity.get_author().alternate_names {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let bio = match entity.get_author().bio {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let birth_date = entity.get_author().birth_date;
+    let death_date = entity.get_author().death_date;
+    let location = match entity.get_author().location {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let date = match entity.get_author().date {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let entity_type = match entity.get_author().entity_type {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let fuller_name = match entity.get_author().fuller_name {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let personal_name = entity.get_author().personal_name;
+    let title = entity.get_author().title;
+    let photos = match entity.get_author().photos {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let links = match entity.get_author().links {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let remote_ids = match entity.get_author().remote_ids {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let wikipedia = match entity.get_author().wikipedia {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let latest_revision = match entity.get_author().latest_revision {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+    let created = match entity.get_author().created {
+        Some(o) => Some(serde_json::to_string(&o).unwrap()),
+        None => None,
+    };
+
     let author: NewAuthor = NewAuthor {
         olid: &entity.get_author().key,
         name: &entity.get_author_name(),
         type_field: &serde_json::to_string(&entity.get_author().type_field).unwrap(),
-        alternate_names: Some(&serde_json::to_string(&entity.get_author().alternate_names).unwrap()),
-        bio: Some(&serde_json::to_string(&entity.get_author().bio).unwrap()),
-        birth_date: entity.get_author().birth_date.as_ref().map(|s| s.as_str()),
-        death_date: entity.get_author().death_date.as_ref().map(|s| s.as_str()),
-        location: Some(&serde_json::to_string(&entity.get_author().location).unwrap()),
-        date: Some(&serde_json::to_string(&entity.get_author().date).unwrap()),
-        entity_type: Some(&serde_json::to_string(&entity.get_author().entity_type).unwrap()),
-        fuller_name: Some(&serde_json::to_string(&entity.get_author().fuller_name).unwrap()),
-        personal_name: entity.get_author().personal_name.as_ref().map(|s| s.as_str()),
-        title: entity.get_author().title.as_ref().map(|s| s.as_str()),
-        photos: Some(&serde_json::to_string(&entity.get_author().photos).unwrap()),
-        links: Some(&serde_json::to_string(&entity.get_author().links).unwrap()),
-        remote_ids: Some(&serde_json::to_string(&entity.get_author().remote_ids).unwrap()),
-        wikipedia: Some(&serde_json::to_string(&entity.get_author().wikipedia).unwrap()),
+        alternate_names: alternate_names.as_ref().map(|s| s.as_str()),
+        bio: bio.as_ref().map(|s| s.as_str()),
+        birth_date: birth_date.as_ref().map(|s| s.as_str()),
+        death_date: death_date.as_ref().map(|s| s.as_str()),
+        location: location.as_ref().map(|s| s.as_str()),
+        date: date.as_ref().map(|s| s.as_str()),
+        entity_type: entity_type.as_ref().map(|s| s.as_str()),
+        fuller_name: fuller_name.as_ref().map(|s| s.as_str()),
+        personal_name: personal_name.as_ref().map(|s| s.as_str()),
+        title: title.as_ref().map(|s| s.as_str()),
+        photos: photos.as_ref().map(|s| s.as_str()),
+        links: links.as_ref().map(|s| s.as_str()),
+        remote_ids: remote_ids.as_ref().map(|s| s.as_str()),
+        wikipedia: wikipedia.as_ref().map(|s| s.as_str()),
         revision: &serde_json::to_string(&entity.get_author().revision).unwrap(),
-        latest_revision: Some(&serde_json::to_string(&entity.get_author().latest_revision).unwrap()),
-        created: Some(&serde_json::to_string(&entity.get_author().created).unwrap()),
+        latest_revision: latest_revision.as_ref().map(|s| s.as_str()),
+        created: created.as_ref().map(|s| s.as_str()),
         last_modified: &serde_json::to_string(&entity.get_author().last_modified).unwrap(),
     };
 
