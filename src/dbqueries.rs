@@ -34,11 +34,10 @@ pub fn add_book(book: &Entity, uid: &String) {
             Some(authors) => Some(serde_json::to_string(&authors).unwrap()),
             None => None,
         };
-    //let works: Some(""),//book.get_edition().works.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
     let identifiers = match book.get_edition().identifiers {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let isbn10 = match book.get_edition().isbn10 {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
@@ -74,62 +73,62 @@ pub fn add_book(book: &Entity, uid: &String) {
     let number_of_pages = match book.get_edition().number_of_pages {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let pagination = book.get_edition().pagination;//.as_ref().map(|s| s.as_str()),
     let physical_dimensions = match book.get_edition().physical_dimensions {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
-    let physical_format = book.get_edition().physical_format;//.as_ref().map(|s| s.as_str()),
-    let publish_country = book.get_edition().publish_country;//.as_ref().map(|s| s.as_str()),
-    let publish_date = book.get_edition().publish_date;//.as_ref().map(|s| s.as_str()),
+    };
+    let physical_format = book.get_edition().physical_format;
+    let publish_country = book.get_edition().publish_country;
+    let publish_date = book.get_edition().publish_date;
     let publish_places = match book.get_edition().publish_places {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let publishers = match book.get_edition().publishers {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let contributions = match book.get_edition().contributions {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let dewey_decimal_class = match book.get_edition().dewey_decimal_class {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let genres = match book.get_edition().genres {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let lc_classifications = match book.get_edition().lc_classifications {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let other_titles = match book.get_edition().other_titles {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let series = match book.get_edition().series {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let source_records = match book.get_edition().source_records {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let subjects = match book.get_edition().subjects {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
-    let work_titles = book.get_edition().work_titles;//.as_ref().map(|s| s.as_str()),
+    };
+    let work_titles = book.get_edition().work_titles;
     let table_of_contents = match book.get_edition().table_of_contents {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
-    let description = book.get_edition().description;//.as_ref().map(|s| s.as_str()),
-    let first_sentence = book.get_edition().first_sentence;//.as_ref().map(|s| s.as_str()),
+    };
+    let description = book.get_edition().description;
+    let first_sentence = book.get_edition().first_sentence;
     let notes = match book.get_edition().notes {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
@@ -286,12 +285,20 @@ pub fn add_work(entity: &Entity) {
         .expect("Error saving book");
 }
 
-pub fn author() -> Result<Vec<Author>, diesel::result::Error> {
+pub fn authors() -> Result<Vec<Author>, diesel::result::Error> {
     let connection = database::connection().get().unwrap();
 
     let authors = authors::table.load::<Author>(&connection)?;
 
     Ok(authors)
+}
+
+pub fn author(olid: &String) -> Result<Author, diesel::result::Error> {
+    let connection = database::connection().get().unwrap();
+
+    let author = authors::dsl::authors.filter(authors::dsl::olid.like(olid)).first(&connection)?;
+
+    Ok(author)
 }
 
 pub fn add_author(entity: &Entity) {
