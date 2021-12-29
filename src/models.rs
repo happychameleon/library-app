@@ -1,5 +1,8 @@
 use diesel::Queryable;
 
+use openlibrary_client::{Edition};
+use serde_json::Value;
+
 use super::schema::authors;
 use super::schema::books;
 use super::schema::works;
@@ -54,6 +57,18 @@ pub struct Book {
     pub last_modified: Option<String>,
     pub isbn_invalid: Option<String>,
     pub ia_box_id: Option<String>,
+}
+
+impl Book {
+    pub fn authors(&self) -> Vec<String> {
+        let author: Vec<openlibrary_client::Authors> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
+        let mut new_author: Vec<String> = Vec::new();
+        for i in author {
+            new_author.push(i.key);
+        }
+
+        new_author
+    }
 }
 
 #[derive(Queryable, PartialEq, Debug)]
