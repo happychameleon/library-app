@@ -60,14 +60,20 @@ pub struct Book {
 }
 
 impl Book {
-    pub fn authors(&self) -> Vec<String> {
-        let author: Vec<openlibrary_client::Authors> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
-        let mut new_author: Vec<String> = Vec::new();
-        for i in author {
-            new_author.push(i.key);
-        }
+    pub fn authors(&self) -> Option<Vec<String>> {
+        let authors = match &self.authors.as_ref() {
+            Some(authors) => {
+                let author: Vec<openlibrary_client::Authors> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
+                let mut new_author: Vec<String> = Vec::new();
+                for i in author {
+                    new_author.push(i.key);
+                }
+                Some(new_author)
+            },
+            None => None,
+        };
 
-        new_author
+        authors
     }
 }
 
@@ -117,6 +123,24 @@ pub struct Work {
     pub latest_revision: Option<String>,
     pub created: Option<String>,
     pub last_modified: String,
+}
+
+impl Work {
+    pub fn authors(&self) -> Option<Vec<String>> {
+        let authors = match &self.authors.as_ref() {
+            Some(authors) => {
+                let author: Vec<openlibrary_client::Authors> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
+                let mut new_author: Vec<String> = Vec::new();
+                for i in author {
+                    new_author.push(i.key);
+                }
+                Some(new_author)
+            },
+            None => None,
+        };
+
+        authors
+    }
 }
 
 #[derive(Insertable)]
