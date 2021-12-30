@@ -5,7 +5,7 @@ use diesel::prelude::*;
 use openlibrary_client::Entity;
 
 use crate::database;
-use crate::models::{Author, Book, NewAuthor, NewBook, NewWork, Work};
+use crate::models::{Author, Book, Work, NewAuthor, NewBook, NewWork};
 use crate::schema::{authors, books, works};
 
 pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
@@ -205,12 +205,20 @@ pub fn add_book(book: &Entity, uid: &String) {
         .expect("Error saving book");
 }
 
-pub fn work() -> Result<Vec<Work>, diesel::result::Error> {
+pub fn works() -> Result<Vec<Work>, diesel::result::Error> {
     let connection = database::connection().get().unwrap();
 
     let works = works::table.load::<Work>(&connection)?;
 
     Ok(works)
+}
+
+pub fn work(olid: &String) -> Result<Work, diesel::result::Error> {
+    let connection = database::connection().get().unwrap();
+
+    let work = works::dsl::works.filter(works::dsl::olid.like(olid)).first(&connection)?;
+
+    Ok(work)
 }
 
 pub fn add_work(entity: &Entity) {
