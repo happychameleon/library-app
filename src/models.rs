@@ -63,7 +63,7 @@ impl Book {
     pub fn authors(&self) -> Option<Vec<String>> {
         let authors = match &self.authors.as_ref() {
             Some(authors) => {
-                let author: Vec<openlibrary_client::Authors> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
+                let author: Vec<openlibrary_client::AuthorsEdition> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
                 let mut new_author: Vec<String> = Vec::new();
                 for i in author {
                     new_author.push(i.key);
@@ -129,7 +129,7 @@ impl Work {
     pub fn authors(&self) -> Option<Vec<String>> {
         let authors = match &self.authors.as_ref() {
             Some(authors) => {
-                let author: Vec<openlibrary_client::Authors> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
+                let author: Vec<openlibrary_client::AuthorsEdition> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
                 let mut new_author: Vec<String> = Vec::new();
                 for i in author {
                     new_author.push(i.key);
