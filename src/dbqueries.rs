@@ -34,6 +34,7 @@ pub fn add_book(book: &Entity, uid: &String) {
             Some(authors) => Some(serde_json::to_string(&authors).unwrap()),
             None => None,
         };
+    let works = serde_json::to_string(&book.get_edition().works).unwrap();
     let identifiers = match book.get_edition().identifiers {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
@@ -157,7 +158,7 @@ pub fn add_book(book: &Entity, uid: &String) {
         subtitle: subtitle.as_ref().map(|s| s.as_str()),
         type_field: Some(type_field),
         authors: authors.as_ref().map(|s| s.as_str()),//authors.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
-        works: Some(""),//book.get_edition().works.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+        works: Some(&works),//book.get_edition().works.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
         identifiers: identifiers.as_ref().map(|s| s.as_str()),
         isbn10: isbn10.as_ref().map(|s| s.as_str()),
         isbn13: isbn13.as_ref().map(|s| s.as_str()),

@@ -165,7 +165,15 @@ impl BooksPage {
                         let cover = book_cover::BookCover::new(book, author);
                         books_flowbox.insert(&cover, -1);
                     },
-                    None => debug!("no author downloaded")
+                    None => {
+                        let work_key = &book.works()[0];
+                        let work = dbqueries::work(&work_key).unwrap();
+                        let author_key = work.authors();
+                        let author = dbqueries::author(&author_key.unwrap()[0]).unwrap();
+
+                        let cover = book_cover::BookCover::new(book, author);
+                        books_flowbox.insert(&cover, -1);
+                    }
                 }
 
             }
@@ -195,7 +203,17 @@ impl BooksPage {
                                 let cover = book_cover::BookCover::new(book, author);
                                 books_flowbox.insert(&cover, -1);
                             },
-                            None => debug!("Author missing for book: {}, olid: {}", book.title, book.olid),
+                            None => {
+                                let work_key = &book.works()[0];
+                                let work = dbqueries::work(&work_key).unwrap();
+                                let author_key = work.authors();
+                                let author = dbqueries::author(&author_key.unwrap()[0]).unwrap();
+
+                                let cover = book_cover::BookCover::new(book, author);
+                                books_flowbox.insert(&cover, -1);
+
+                                //debug!("Author missing for book: {}, olid: {}", book.title, book.olid);
+                            },
                         }
 
                     }
