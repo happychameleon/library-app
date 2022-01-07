@@ -42,40 +42,40 @@ pub fn add_book(book: &Entity, uid: &String) {
     let isbn10 = match book.get_edition().isbn10 {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let isbn13 = match book.get_edition().isbn13 {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let lccn = match book.get_edition().lccn {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
-    let ocaid = book.get_edition().ocaid;//.as_ref().map(|s| s.as_str()),
+    };
+    let ocaid = book.get_edition().ocaid;
     let oclc_numbers = match book.get_edition().oclc_numbers {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+    };
     let covers = match book.get_edition().covers {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|c| serde_json::to_string(c).unwrap().as_str()),
-    let links = book.get_edition().links;//.as_ref().map(|s| s.as_str()),
+    };
+    let links = book.get_edition().links;
     let languages = match book.get_edition().languages {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
-    let by_statement = book.get_edition().by_statement;//.as_ref().map(|s| s.as_str()),
+    };
+    let by_statement = book.get_edition().by_statement;
     let weight = match book.get_edition().weight {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
-    };//.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
-    let edition_name = book.get_edition().edition_name;//.as_ref().map(|s| s.as_str()),
+    };
+    let edition_name = book.get_edition().edition_name;
     let number_of_pages = match book.get_edition().number_of_pages {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
     };
-    let pagination = book.get_edition().pagination;//.as_ref().map(|s| s.as_str()),
+    let pagination = book.get_edition().pagination;
     let physical_dimensions = match book.get_edition().physical_dimensions {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
@@ -157,8 +157,8 @@ pub fn add_book(book: &Entity, uid: &String) {
         full_title: full_title.as_ref().map(|s| s.as_str()),
         subtitle: subtitle.as_ref().map(|s| s.as_str()),
         type_field: Some(type_field),
-        authors: authors.as_ref().map(|s| s.as_str()),//authors.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
-        works: Some(&works),//book.get_edition().works.as_ref().map(|o| serde_json::to_string(o).unwrap().as_str()),
+        authors: authors.as_ref().map(|s| s.as_str()),
+        works: Some(&works),
         identifiers: identifiers.as_ref().map(|s| s.as_str()),
         isbn10: isbn10.as_ref().map(|s| s.as_str()),
         isbn13: isbn13.as_ref().map(|s| s.as_str()),
@@ -225,8 +225,7 @@ pub fn work(olid: &String) -> Result<Work, diesel::result::Error> {
 pub fn add_work(entity: &Entity) {
     let connection = database::connection().get().unwrap();
 
-    let subtitle = entity.get_work().subtitle;//.as_ref().map(|s| s.as_str()),
-    //let type_field = &serde_json::to_string(&entity.get_work().type_field).unwrap(),
+    let subtitle = entity.get_work().subtitle;
     let authors = match entity.get_work().authors {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
@@ -256,8 +255,7 @@ pub fn add_work(entity: &Entity) {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
     };
-    let notes = entity.get_work().notes;//.as_ref().map(|s| s.as_str()),
-    //let revision = &serde_json::to_string(&entity.get_work().revision).unwrap(), //usize instead of string
+    let notes = entity.get_work().notes;
     let latest_revision = match entity.get_work().latest_revision {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
@@ -266,7 +264,6 @@ pub fn add_work(entity: &Entity) {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
         None => None,
     };
-    //let last_modified = &serde_json::to_string(&entity.get_work().last_modified).unwrap();
 
     let work: NewWork = NewWork {
         olid: &entity.get_work().key,
