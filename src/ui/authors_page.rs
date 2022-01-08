@@ -5,6 +5,12 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
+use crate::application::Action;
+use crate::dbqueries;
+use crate::models::Book;
+use crate::path;
+use crate::ui::author_row;
+
 mod imp {
     use super::*;
     use adw::subclass::prelude::BinImpl;
@@ -14,7 +20,7 @@ mod imp {
     #[template(resource = "/org/thievingraccoon/Books/ui/authors_page.ui")]
     pub struct AuthorsPage {
         #[template_child]
-        pub authors_flowbox: TemplateChild<gtk::FlowBox>,
+        pub authors_listbox: TemplateChild<gtk::ListBox>,
     }
 
     #[glib::object_subclass]
@@ -24,9 +30,9 @@ mod imp {
         type Type = super::AuthorsPage;
 
         fn new() -> Self {
-            let authors_flowbox = TemplateChild::default();
+            let authors_listbox = TemplateChild::default();
 
-            Self { authors_flowbox }
+            Self { authors_listbox }
         }
 
         fn class_init(klass: &mut Self::Class) {
@@ -49,4 +55,27 @@ glib::wrapper! {
     pub struct AuthorsPage (ObjectSubclass<imp::AuthorsPage>) @extends gtk::Widget, gtk::Box;
 }
 
-impl AuthorsPage {}
+impl AuthorsPage {
+    pub fn init(&self, sender: Sender<Action>) {
+        let imp = imp::AuthorsPage::from_instance(self);
+
+
+
+        self.setup_widget();
+    }
+
+    fn setup_widget(&self) {
+        let imp = imp::AuthorsPage::from_instance(self);
+
+        let listbox: gtk::ListBox = imp.authors_listbox.clone().downcast().unwrap();
+
+        let authors = dbqueries::authors().unwrap();
+
+        for author in authors {
+            let author_row = author_row::AuthorRow::new(author);
+            listbox.insert(&author_row, -1)
+        }
+
+
+    }
+}

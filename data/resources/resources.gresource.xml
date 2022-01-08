@@ -6,6 +6,7 @@
     <file compressed="true" preprocess="xml-stripblanks">ui/window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/books_page.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/authors_page.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/author_row.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/scan_book_page.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/book_form_page.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/book_cover.ui</file>
