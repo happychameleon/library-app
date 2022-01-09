@@ -237,6 +237,7 @@ impl BooksApplicationWindow {
         imp.view_switcher.set_stack(Some(&imp.stack.get()));
 
         imp.books_page.init(sender.clone());
+        imp.authors_page.init(sender.clone());
 
         imp.scan_book_page
             .connect_local(

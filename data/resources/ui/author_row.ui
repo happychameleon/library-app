@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="AuthorRow" parent="GtkListBoxRow">
+    <child>
+      <object class="GtkBox">
+        <child>
+          <object class="GtkLabel" id="author_name">
+            <property name="justify">center</property>
+            <property name="wrap">True</property>
+            <property name="ellipsize">middle</property>
+            <property name="max_width_chars">20</property>
+            <property name="lines">2</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

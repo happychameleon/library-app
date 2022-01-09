@@ -7,7 +7,7 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-use crate::models::Book;
+use crate::models::{Book, Author};
 use crate::path;
 
 mod imp {
@@ -64,7 +64,7 @@ glib::wrapper! {
 }
 
 impl BookCover {
-    pub fn new(book: Book) -> Self {
+    pub fn new(book: Book, author: Author) -> Self {
         let cover = glib::Object::new::<Self>(&[]).unwrap();
 
         let imp = imp::BookCover::from_instance(&cover);
@@ -72,15 +72,21 @@ impl BookCover {
         match book.covers {
             Some(cover) => {
                 let mut image_path = path::DATA.clone();
-                image_path.push(format!("covers/{}.jpg", book.isbn.unwrap()));
+                let isbn: Vec<String> = serde_json::from_str(&book.isbn13.unwrap()).unwrap();
+                debug!("isbn: {}", isbn[0]);
+                image_path.push(format!("covers/{}.jpg", isbn[0]));
                 imp.cover_image.set_from_file(image_path.to_str().unwrap());
                 imp.cover_image.set_pixel_size(200)
             }
-            None => {}
+            None => {
+                debug!("No covers for this edition");
+            }
         }
 
         imp.book_title.set_label(&book.title);
-        imp.author_name.set_label(&book.author.unwrap());
+        let authors = &author.name;
+        debug!("authors: {}", authors);
+        imp.author_name.set_label(authors);
 
         cover
     }

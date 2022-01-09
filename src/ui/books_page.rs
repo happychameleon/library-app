@@ -10,6 +10,7 @@ use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 use rand::distributions::Alphanumeric;
 use rand::prelude::*;
+use serde_json::Value;
 
 use std::fs;
 use std::path::PathBuf;
@@ -134,38 +135,47 @@ impl BooksPage {
         match entity {
             Ok(entity) => {
                 dbqueries::add_book(&entity, &uid);
+                dbqueries::add_author(&entity);
+                dbqueries::add_work(&entity);
+
                 debug!("Adding book with uid: {}", uid);
 
-                let len_comp: usize = 0;
-
-                let cover = if entity.get_edition().covers.len() == len_comp {
-                    None
-                } else {
-                    debug!("Image cover path: {}", image_path.to_str().unwrap());
-                    match block_on(image_client.save_cover(
-                        CoverSize::L,
-                        String::from(image_path.to_str().unwrap()),
-                        CoverKey::ISBN(String::from(isbn)),
-                    )) {
-                        Ok(val) => debug!("All well"),
-                        Err(error) => debug!("{}", error),
-                    };
-                    Some(entity.get_edition().covers[0].to_string())
+                match entity.get_edition().covers {
+                    Some(cover) => {
+                        debug!("Image cover path: {}", image_path.to_str().unwrap());
+                        match block_on(image_client.save_cover(
+                            CoverSize::L,
+                            String::from(image_path.to_str().unwrap()),
+                            CoverKey::ISBN(String::from(isbn)),
+                        )) {
+                            Ok(val) => debug!("All well"),
+                            Err(error) => debug!("{}", error),
+                        };
+                    },
+                    None => {},
                 };
 
-                let book = Book {
-                    id: 1,
-                    olid: entity.get_olid(),
-                    uid: uid,
-                    isbn: Some(String::from(isbn)),
-                    title: entity.get_edition().title,
-                    author: Some(entity.get_author_name()),
-                    work: Some(entity.get_work().key),
-                    covers: cover,
-                };
+                let book = dbqueries::book(&uid).unwrap();
 
-                let cover = book_cover::BookCover::new(book);
-                books_flowbox.insert(&cover, -1);
+                match &book.authors() {
+                    Some(authors) => {
+                        let author_key = &authors[0];
+                        let author = dbqueries::author(&author_key).unwrap();
+
+                        let cover = book_cover::BookCover::new(book, author);
+                        books_flowbox.insert(&cover, -1);
+                    },
+                    None => {
+                        let work_key = &book.works()[0];
+                        let work = dbqueries::work(&work_key).unwrap();
+                        let author_key = work.authors();
+                        let author = dbqueries::author(&author_key.unwrap()[0]).unwrap();
+
+                        let cover = book_cover::BookCover::new(book, author);
+                        books_flowbox.insert(&cover, -1);
+                    }
+                }
+
             }
             Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
         };
@@ -184,8 +194,28 @@ impl BooksPage {
             match books {
                 Ok(books) => {
                     for book in books {
-                        let cover = book_cover::BookCover::new(book);
-                        books_flowbox.insert(&cover, -1);
+                        match &book.authors() {
+                            Some(authors) => {
+                                let author_key = &authors[0];
+                                debug!("author: {}", author_key);
+                                let author = dbqueries::author(&author_key).unwrap();
+
+                                let cover = book_cover::BookCover::new(book, author);
+                                books_flowbox.insert(&cover, -1);
+                            },
+                            None => {
+                                let work_key = &book.works()[0];
+                                let work = dbqueries::work(&work_key).unwrap();
+                                let author_key = work.authors();
+                                let author = dbqueries::author(&author_key.unwrap()[0]).unwrap();
+
+                                let cover = book_cover::BookCover::new(book, author);
+                                books_flowbox.insert(&cover, -1);
+
+                                //debug!("Author missing for book: {}, olid: {}", book.title, book.olid);
+                            },
+                        }
+
                     }
                 }
                 Err(error) => debug!("Failed to get books from database: {}", error),
