@@ -59,8 +59,6 @@ impl AuthorsPage {
     pub fn init(&self, sender: Sender<Action>) {
         let imp = imp::AuthorsPage::from_instance(self);
 
-
-
         self.setup_widget();
     }
 
@@ -75,7 +73,5 @@ impl AuthorsPage {
             let author_row = author_row::AuthorRow::new(author);
             listbox.insert(&author_row, -1)
         }
-
-
     }
 }

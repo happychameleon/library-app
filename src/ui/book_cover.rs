@@ -7,7 +7,7 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-use crate::models::{Book, Author};
+use crate::models::{Author, Book};
 use crate::path;
 
 mod imp {
@@ -72,7 +72,7 @@ impl BookCover {
         match book.covers {
             Some(cover) => {
                 let mut image_path = path::DATA.clone();
-                let isbn: Vec<String> = serde_json::from_str(&book.isbn13.unwrap()).unwrap();
+                let isbn: Vec<String> = serde_json::from_str(&book.isbn13.unwrap()).unwrap(); // some books will not have a isbn 13 saved if using only ol data
                 debug!("isbn: {}", isbn[0]);
                 image_path.push(format!("covers/{}.jpg", isbn[0]));
                 imp.cover_image.set_from_file(image_path.to_str().unwrap());

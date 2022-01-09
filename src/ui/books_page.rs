@@ -151,8 +151,8 @@ impl BooksPage {
                             Ok(val) => debug!("All well"),
                             Err(error) => debug!("{}", error),
                         };
-                    },
-                    None => {},
+                    }
+                    None => {}
                 };
 
                 let book = dbqueries::book(&uid).unwrap();
@@ -164,7 +164,7 @@ impl BooksPage {
 
                         let cover = book_cover::BookCover::new(book, author);
                         books_flowbox.insert(&cover, -1);
-                    },
+                    }
                     None => {
                         let work_key = &book.works()[0];
                         let work = dbqueries::work(&work_key).unwrap();
@@ -175,7 +175,6 @@ impl BooksPage {
                         books_flowbox.insert(&cover, -1);
                     }
                 }
-
             }
             Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
         };

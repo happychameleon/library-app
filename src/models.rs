@@ -1,6 +1,6 @@
 use diesel::Queryable;
 
-use openlibrary_client::{Edition};
+use openlibrary_client::Edition;
 use serde_json::Value;
 
 use super::schema::authors;
@@ -64,13 +64,14 @@ impl Book {
         let authors = match &self.authors.as_ref() {
             Some(authors) => {
                 println!("json authors {}", authors);
-                let author: Vec<openlibrary_client::AuthorsEdition> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
+                let author: Vec<openlibrary_client::AuthorsEdition> =
+                    serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
                 let mut new_author: Vec<String> = Vec::new();
                 for i in author {
                     new_author.push(i.key);
                 }
                 Some(new_author)
-            },
+            }
             None => None,
         };
 
@@ -79,7 +80,8 @@ impl Book {
 
     pub fn works(&self) -> Vec<String> {
         println!("Json string: {}", self.works.as_ref().unwrap());
-        let works: Vec<openlibrary_client::Works> = serde_json::from_str(&self.works.as_ref().unwrap()).unwrap();
+        let works: Vec<openlibrary_client::Works> =
+            serde_json::from_str(&self.works.as_ref().unwrap()).unwrap();
 
         let mut new_works: Vec<String> = Vec::new();
         for i in works {
@@ -142,13 +144,14 @@ impl Work {
     pub fn authors(&self) -> Option<Vec<String>> {
         let authors = match &self.authors.as_ref() {
             Some(authors) => {
-                let author: Vec<openlibrary_client::AuthorsWork> = serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
+                let author: Vec<openlibrary_client::AuthorsWork> =
+                    serde_json::from_str(&self.authors.as_ref().unwrap()).unwrap();
                 let mut new_author: Vec<String> = Vec::new();
                 for i in author {
                     new_author.push(i.author.key);
                 }
                 Some(new_author)
-            },
+            }
             None => None,
         };
 
@@ -255,4 +258,3 @@ pub struct NewWork<'a> {
     pub created: Option<&'a str>,
     pub last_modified: &'a str,
 }
-
