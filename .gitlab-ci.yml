@@ -3,7 +3,7 @@ stages:
   - test
 
 flatpak:
-  image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/rust_bundle:40'
+  image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/rust_bundle:master'
   stage: test
   tags:
     - flatpak
@@ -13,6 +13,8 @@ flatpak:
     FLATPAK_MODULE: "books"
     APP_ID: "org.thievingraccoon.Books.Devel"
     RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
+  before_script:
+    - flatpak --user install -y flathub org.freedesktop.Sdk.Extension.llvm12//21.08
   script:
     - >
       xvfb-run -a -s "-screen 0 1024x768x24"

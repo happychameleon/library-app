@@ -7,7 +7,7 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-use crate::models::{Book, Author};
+use crate::models::{Author, Book};
 use crate::path;
 
 mod imp {
@@ -30,9 +30,7 @@ mod imp {
         fn new() -> Self {
             let author_name = TemplateChild::default();
 
-            Self {
-                author_name,
-            }
+            Self { author_name }
         }
 
         fn class_init(klass: &mut Self::Class) {

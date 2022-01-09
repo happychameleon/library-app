@@ -5,7 +5,7 @@ use diesel::prelude::*;
 use openlibrary_client::Entity;
 
 use crate::database;
-use crate::models::{Author, Book, Work, NewAuthor, NewBook, NewWork};
+use crate::models::{Author, Book, NewAuthor, NewBook, NewWork, Work};
 use crate::schema::{authors, books, works};
 
 pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
@@ -19,7 +19,9 @@ pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
 pub fn book(uid: &String) -> Result<Book, diesel::result::Error> {
     let connection = database::connection().get().unwrap();
 
-    let book = books::dsl::books.filter(books::dsl::uid.like(uid)).first(&connection)?;
+    let book = books::dsl::books
+        .filter(books::dsl::uid.like(uid))
+        .first(&connection)?;
 
     Ok(book)
 }
@@ -31,9 +33,9 @@ pub fn add_book(book: &Entity, uid: &String) {
     let subtitle = book.get_edition().subtitle;
     let type_field = &serde_json::to_string(&book.get_edition().type_field).unwrap();
     let authors = match book.get_edition().authors {
-            Some(authors) => Some(serde_json::to_string(&authors).unwrap()),
-            None => None,
-        };
+        Some(authors) => Some(serde_json::to_string(&authors).unwrap()),
+        None => None,
+    };
     let works = serde_json::to_string(&book.get_edition().works).unwrap();
     let identifiers = match book.get_edition().identifiers {
         Some(o) => Some(serde_json::to_string(&o).unwrap()),
@@ -168,31 +170,31 @@ pub fn add_book(book: &Entity, uid: &String) {
         covers: covers.as_ref().map(|s| s.as_str()),
         links: links.as_ref().map(|s| s.as_str()),
         languages: languages.as_ref().map(|s| s.as_str()),
-        by_statement:by_statement.as_ref().map(|s| s.as_str()),
+        by_statement: by_statement.as_ref().map(|s| s.as_str()),
         weight: weight.as_ref().map(|s| s.as_str()),
-        edition_name:edition_name.as_ref().map(|s| s.as_str()),
+        edition_name: edition_name.as_ref().map(|s| s.as_str()),
         number_of_pages: number_of_pages.as_ref().map(|s| s.as_str()),
         pagination: pagination.as_ref().map(|s| s.as_str()),
-        physical_dimensions:physical_dimensions.as_ref().map(|s| s.as_str()),
+        physical_dimensions: physical_dimensions.as_ref().map(|s| s.as_str()),
         physical_format: physical_format.as_ref().map(|s| s.as_str()),
         publish_country: publish_country.as_ref().map(|s| s.as_str()),
         publish_date: publish_date.as_ref().map(|s| s.as_str()),
         publish_places: publish_places.as_ref().map(|s| s.as_str()),
         publishers: publishers.as_ref().map(|s| s.as_str()),
         contributions: contributions.as_ref().map(|s| s.as_str()),
-        dewey_decimal_class:dewey_decimal_class.as_ref().map(|s| s.as_str()),
+        dewey_decimal_class: dewey_decimal_class.as_ref().map(|s| s.as_str()),
         genres: genres.as_ref().map(|s| s.as_str()),
-        lc_classifications:lc_classifications.as_ref().map(|s| s.as_str()),
+        lc_classifications: lc_classifications.as_ref().map(|s| s.as_str()),
         other_titles: other_titles.as_ref().map(|s| s.as_str()),
         series: series.as_ref().map(|s| s.as_str()),
-        source_records:source_records.as_ref().map(|s| s.as_str()),
+        source_records: source_records.as_ref().map(|s| s.as_str()),
         subjects: subjects.as_ref().map(|s| s.as_str()),
         work_titles: work_titles.as_ref().map(|s| s.as_str()),
-        table_of_contents:table_of_contents.as_ref().map(|s| s.as_str()),
+        table_of_contents: table_of_contents.as_ref().map(|s| s.as_str()),
         description: description.as_ref().map(|s| s.as_str()),
-        first_sentence:first_sentence.as_ref().map(|s| s.as_str()),
+        first_sentence: first_sentence.as_ref().map(|s| s.as_str()),
         notes: notes.as_ref().map(|s| s.as_str()),
-        revision: Some(revision),//Some(&book.get_edition().revision.to_string()),
+        revision: Some(revision), //Some(&book.get_edition().revision.to_string()),
         latest_revision: latest_revision.as_ref().map(|s| s.as_str()),
         created: Some(created),
         last_modified: Some(last_modified),
@@ -217,7 +219,9 @@ pub fn works() -> Result<Vec<Work>, diesel::result::Error> {
 pub fn work(olid: &String) -> Result<Work, diesel::result::Error> {
     let connection = database::connection().get().unwrap();
 
-    let work = works::dsl::works.filter(works::dsl::olid.like(olid)).first(&connection)?;
+    let work = works::dsl::works
+        .filter(works::dsl::olid.like(olid))
+        .first(&connection)?;
 
     Ok(work)
 }
@@ -302,7 +306,9 @@ pub fn authors() -> Result<Vec<Author>, diesel::result::Error> {
 pub fn author(olid: &String) -> Result<Author, diesel::result::Error> {
     let connection = database::connection().get().unwrap();
 
-    let author = authors::dsl::authors.filter(authors::dsl::olid.like(olid)).first(&connection)?;
+    let author = authors::dsl::authors
+        .filter(authors::dsl::olid.like(olid))
+        .first(&connection)?;
 
     Ok(author)
 }
@@ -392,4 +398,3 @@ pub fn add_author(entity: &Entity) {
         .execute(&connection)
         .expect("Error saving book");
 }
-
