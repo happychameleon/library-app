@@ -1,7 +1,18 @@
 -- Your SQL goes here
+
+-- unique copy of a book, links to openlibrary data
 CREATE TABLE `books` (
-    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     `uid` TEXT UNIQUE NOT NULL, -- a unique edition specific random id
+    `isbn` TEXT NOT NULL, -- isbn that was scaned from physical copy of book
+    `edition_olid` TEXT NOT NULL,
+    `authors_olid` TEXT NOT NULL,
+    `works_olid` TEXT NOT NULL,
+)
+
+-- corresponds to openlibrary editions
+CREATE TABLE `editions` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    --`uid` TEXT UNIQUE NOT NULL, -- a unique edition specific random id
     `olid` TEXT NOT NULL,
     `title` TEXT NOT NULL,
     `full_title` TEXT,
