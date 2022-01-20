@@ -5,8 +5,8 @@ use diesel::prelude::*;
 use openlibrary_client::Entity;
 
 use crate::database;
-use crate::models::{Author, Book, NewAuthor, NewBook, NewWork, Work};
-use crate::schema::{authors, books, works};
+use crate::models::{Author, Book, Edition, NewAuthor, NewBook, NewEdition, NewWork, Work};
+use crate::schema::{authors, books, editions, works};
 
 pub fn books() -> Result<Vec<Book>, diesel::result::Error> {
     let connection = database::connection().get().unwrap();
@@ -26,7 +26,34 @@ pub fn book(uid: &String) -> Result<Book, diesel::result::Error> {
     Ok(book)
 }
 
-pub fn add_book(book: &Entity, uid: &String) {
+pub fn add_book(uid: &String, isbn: &String, edition_olid: &String, authors_olid: &String, works_olid: &String) {
+    let connection = database::connection().get().unwrap();
+
+    let book: NewBook = NewBook {
+        uid: uid,
+        isbn: isbn,
+        edition_olid: edition_olid,
+        authors_olid: authors_olid,
+        works_olid: works_olid,
+    };
+
+    diesel::insert_into(books::table)
+        .values(&book)
+        .execute(&connection)
+        .expect("Error saving book");
+}
+
+pub fn edition(olid: &String) -> Result<Edition, diesel::result::Error> {
+    let connection = database::connection().get().unwrap();
+
+    let edition = editions::dsl::editions
+        .filter(editions::dsl::olid.like(olid))
+        .first(&connection)?;
+
+    Ok(edition)
+}
+
+pub fn add_edition(book: &Entity) {
     let connection = database::connection().get().unwrap();
 
     let full_title = book.get_edition().full_title;
@@ -152,8 +179,7 @@ pub fn add_book(book: &Entity, uid: &String) {
         None => None,
     };
 
-    let book: NewBook = NewBook {
-        uid: &uid,
+    let book: NewEdition = NewEdition {
         olid: &book.get_olid(),
         title: &book.get_edition().title,
         full_title: full_title.as_ref().map(|s| s.as_str()),
@@ -202,7 +228,7 @@ pub fn add_book(book: &Entity, uid: &String) {
         ia_box_id: ia_box_id.as_ref().map(|s| s.as_str()),
     };
 
-    diesel::insert_into(books::table)
+    diesel::insert_into(editions::table)
         .values(&book)
         .execute(&connection)
         .expect("Error saving book");
