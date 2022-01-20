@@ -1,16 +1,26 @@
 use diesel::Queryable;
 
-use openlibrary_client::Edition;
+//use openlibrary_client::Edition;
 use serde_json::Value;
 
 use super::schema::authors;
 use super::schema::books;
+use super::schema::editions;
 use super::schema::works;
 
 #[derive(Queryable, PartialEq, Debug)]
 pub struct Book {
     pub id: i32,
     pub uid: String,
+    pub isbn: String,
+    pub edition_olid: String,
+    pub authors_olid: String,
+    pub works_olid: String,
+}
+
+#[derive(Queryable, PartialEq, Debug)]
+pub struct Edition {
+    pub id: i32,
     pub olid: String,
     pub title: String,
     pub full_title: Option<String>,
@@ -59,7 +69,7 @@ pub struct Book {
     pub ia_box_id: Option<String>,
 }
 
-impl Book {
+impl Edition {
     pub fn authors(&self) -> Option<Vec<String>> {
         let authors = match &self.authors.as_ref() {
             Some(authors) => {
@@ -163,6 +173,15 @@ impl Work {
 #[table_name = "books"]
 pub struct NewBook<'a> {
     pub uid: &'a str,
+    pub isbn: &'a str,
+    pub edition_olid: &'a str,
+    pub authors_olid: &'a str,
+    pub works_olid: &'a str,
+}
+
+#[derive(Insertable)]
+#[table_name = "editions"]
+pub struct NewEdition<'a> {
     pub olid: &'a str,
     pub title: &'a str,
     pub full_title: Option<&'a str>,
