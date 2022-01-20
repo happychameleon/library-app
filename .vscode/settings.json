@@ -1,3 +1,6 @@
 {
-    "rust-analyzer.server.path": "/var/home/m/Documents/git_projects/library-app/.flatpak/rust-analyzer.sh"
+    "rust-analyzer.server.path": "/var/home/m/Documents/git_projects/library-app/.flatpak/rust-analyzer.sh",
+    "rust-analyzer.files.excludeDirs": [
+        ".flatpak"
+    ]
 }

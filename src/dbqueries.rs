@@ -43,6 +43,14 @@ pub fn add_book(uid: &String, isbn: &String, edition_olid: &String, authors_olid
         .expect("Error saving book");
 }
 
+pub fn editions() -> Result<Vec<Edition>, diesel::result::Error> {
+    let connection = database::connection().get().unwrap();
+
+    let editions = editions::table.load::<Edition>(&connection)?;
+
+    Ok(editions)
+}
+
 pub fn edition(olid: &String) -> Result<Edition, diesel::result::Error> {
     let connection = database::connection().get().unwrap();
 
