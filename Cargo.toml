@@ -34,4 +34,4 @@ tracing = "0.1"
 tracing-subscriber = "0.2"
 zbar-rust = "0.0"
 
-openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", rev="96d137f56721dab4f7be5aa186b258dcb5c247bc" }
+openlibrary-client = { git = "https://github.com/happychameleon/olc-rs.git", rev="35e2057ff08dd0598467395af9ce7f90194ffbab" }
