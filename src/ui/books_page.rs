@@ -143,9 +143,21 @@ impl BooksPage {
                     &entity.get_author().key,
                     &entity.get_work().key
                 );
-                dbqueries::add_edition(&entity);
-                dbqueries::add_author(&entity);
-                dbqueries::add_work(&entity);
+
+                match dbqueries::edition(&entity.get_olid()) {
+                    Ok(val) => {}
+                    Err(error) => {dbqueries::add_edition(&entity)}
+                }
+                match dbqueries::author(&entity.get_author().key) {
+                    Ok(val) => {}
+                    Err(error) => {dbqueries::add_author(&entity)}
+                }
+                match dbqueries::work(&entity.get_work().key) {
+                    Ok(val) => {}
+                    Err(error) => {dbqueries::add_work(&entity);}
+                }
+
+
 
                 debug!("Adding book with uid: {}", uid);
 
@@ -164,35 +176,13 @@ impl BooksPage {
                     None => {}
                 };
 
-
                 let book = dbqueries::book(&uid).unwrap();
                 debug!("{}", book.edition_olid);
                 let edition = dbqueries::edition(&book.edition_olid).unwrap();
                 let author = dbqueries::author(&book.authors_olid).unwrap();
-                //let work = dbqueries::work(&book.works_olid).unwrap();
 
                 let cover = book_cover::BookCover::new(book, edition, author);
                 books_flowbox.insert(&cover, -1);
-
-                // match &edition.authors() {
-                //     Some(authors) => {
-                //         let author_key = &authors[0];
-                //         let author = dbqueries::author(&author_key).unwrap();
-
-
-                //         let cover = book_cover::BookCover::new(book, edition, author);
-                //         books_flowbox.insert(&cover, -1);
-                //     }
-                //     None => {
-                //         let work_key = &edition.works()[0];
-                //         let work = dbqueries::work(&work_key).unwrap();
-                //         let author_key = work.authors();
-                //         let author = dbqueries::author(&author_key.unwrap()[0]).unwrap();
-
-                //         let cover = book_cover::BookCover::new(book, edition, author);
-                //         books_flowbox.insert(&cover, -1);
-                //     }
-                // }
             }
             Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
         };
@@ -216,30 +206,6 @@ impl BooksPage {
 
                         let cover = book_cover::BookCover::new(book, edition, author);
                         books_flowbox.insert(&cover, -1);
-                        // match &book.authors() {
-                        //     Some(authors) => {
-                        //         let author_key = &authors[0];
-                        //         debug!("author: {}", author_key);
-                        //         let author = dbqueries::author(&author_key).unwrap();
-                        //         let edition = dbqueries::edition(&book.edition_olid).unwrap();
-
-                        //         let cover = book_cover::BookCover::new(book, edition, author);
-                        //         books_flowbox.insert(&cover, -1);
-                        //     },
-                        //     None => {
-                        //         let work_key = &book.works()[0];
-                        //         let work = dbqueries::work(&work_key).unwrap();
-                        //         let author_key = work.authors();
-                        //         let author = dbqueries::author(&author_key.unwrap()[0]).unwrap();
-                        //         let edition = dbqueries::edition(&book.edition_olid).unwrap();
-
-                        //         let cover = book_cover::BookCover::new(book, edition, author);
-                        //         books_flowbox.insert(&cover, -1);
-
-                                //debug!("Author missing for book: {}, olid: {}", book.title, book.olid);
-                        //     },
-                        // }
-
                     }
                 }
                 Err(error) => debug!("Failed to get books from database: {}", error),
