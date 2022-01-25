@@ -99,7 +99,7 @@ impl BooksPage {
         }
     }
 
-    pub fn add_book(&self, book: Book, edition: Edition, author: Author) {
+    pub fn add_book(&self, book: &Book, edition: &Edition, author: &Author) {
         let imp = imp::BooksPage::from_instance(self);
 
         debug!("Calling add_book function");
@@ -126,7 +126,7 @@ impl BooksPage {
                         let edition = dbqueries::edition(&book.edition_olid).unwrap();
                         let author = dbqueries::author(&book.authors_olid).unwrap();
 
-                        let cover = book_cover::BookCover::new(book, edition, author);
+                        let cover = book_cover::BookCover::new(&book, &edition, &author);
                         books_flowbox.insert(&cover, -1);
                     }
                 }

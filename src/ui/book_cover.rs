@@ -64,16 +64,16 @@ glib::wrapper! {
 }
 
 impl BookCover {
-    pub fn new(book: Book, edition: Edition, author: Author) -> Self {
+    pub fn new(book: &Book, edition: &Edition, author: &Author) -> Self {
         let cover = glib::Object::new::<Self>(&[]).unwrap();
 
         let imp = imp::BookCover::from_instance(&cover);
 
-        match edition.covers {
+        match &edition.covers {
             Some(cover) => {
                 let mut image_path = path::DATA.clone();
                 //let isbn: Vec<String> = serde_json::from_str(&edition.isbn13.unwrap()).unwrap(); // some editions will not have a isbn 13 saved if using only ol data
-                let isbn = book.isbn;
+                let isbn = &book.isbn;
                 debug!("isbn: {}", isbn);
                 image_path.push(format!("covers/{}.jpg", isbn));
                 imp.cover_image.set_from_file(image_path.to_str().unwrap());
