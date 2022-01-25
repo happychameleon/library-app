@@ -54,7 +54,7 @@ glib::wrapper! {
 }
 
 impl AuthorRow {
-    pub fn new(author: Author) -> Self {
+    pub fn new(author: &Author) -> Self {
         let author_row = glib::Object::new::<Self>(&[]).unwrap();
 
         let imp = imp::AuthorRow::from_instance(&author_row);

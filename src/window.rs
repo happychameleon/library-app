@@ -310,7 +310,8 @@ impl BooksApplicationWindow {
                 let edition = dbqueries::edition(&book.edition_olid).unwrap();
                 let author = dbqueries::author(&book.authors_olid).unwrap();
 
-                imp.books_page.add_book(book, edition, author);
+                imp.books_page.add_book(&book, &edition, &author);
+                imp.authors_page.add_author(&author);
             }
             Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
         };
