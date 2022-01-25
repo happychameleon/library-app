@@ -8,18 +8,11 @@ use gtk::subclass::prelude::*;
 use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
-use rand::distributions::Alphanumeric;
-use rand::prelude::*;
-use serde_json::Value;
 
-use std::fs;
-use std::path::PathBuf;
-
-use openlibrary_client::{Client, CoverKey, CoverSize, Edition};
 
 use crate::application::Action;
 use crate::dbqueries;
-use crate::models::Book;
+use crate::models::{Book, Edition, Author};
 use crate::path;
 use crate::ui::book_cover;
 
@@ -106,86 +99,15 @@ impl BooksPage {
         }
     }
 
-    pub fn add_book(&self, isbn: &str) {
+    pub fn add_book(&self, book: Book, edition: Edition, author: Author) {
         let imp = imp::BooksPage::from_instance(self);
 
         debug!("Calling add_book function");
 
         let books_flowbox: gtk::FlowBox = imp.books_flowbox.clone().downcast().unwrap();
 
-        let client = Client::new();
-        let image_client = Client::new();
-
-        let entity = block_on(client.entity_by_isbn(isbn));
-
-        let mut image_path = path::DATA.clone();
-        image_path.push(format!("covers/"));
-        if !image_path.exists() {
-            fs::create_dir_all(image_path.clone()).unwrap();
-        }
-        image_path.push(format!("{}.jpg", isbn));
-
-        let mut rng = rand::thread_rng();
-        let uid: String = (&mut rng)
-            .sample_iter(Alphanumeric)
-            .take(32)
-            .map(char::from)
-            .collect();
-
-        let isbn_string = String::from(isbn);
-
-        match entity {
-            Ok(entity) => {
-                dbqueries::add_book(
-                    &uid,
-                    &isbn_string,
-                    &entity.get_olid(),
-                    &entity.get_author().key,
-                    &entity.get_work().key
-                );
-
-                match dbqueries::edition(&entity.get_olid()) {
-                    Ok(val) => {}
-                    Err(error) => {dbqueries::add_edition(&entity)}
-                }
-                match dbqueries::author(&entity.get_author().key) {
-                    Ok(val) => {}
-                    Err(error) => {dbqueries::add_author(&entity)}
-                }
-                match dbqueries::work(&entity.get_work().key) {
-                    Ok(val) => {}
-                    Err(error) => {dbqueries::add_work(&entity);}
-                }
-
-
-
-                debug!("Adding book with uid: {}", uid);
-
-                match entity.get_edition().covers {
-                    Some(cover) => {
-                        debug!("Image cover path: {}", image_path.to_str().unwrap());
-                        match block_on(image_client.save_cover(
-                            CoverSize::L,
-                            String::from(image_path.to_str().unwrap()),
-                            CoverKey::ISBN(String::from(isbn)),
-                        )) {
-                            Ok(val) => debug!("All well"),
-                            Err(error) => debug!("{}", error),
-                        };
-                    }
-                    None => {}
-                };
-
-                let book = dbqueries::book(&uid).unwrap();
-                debug!("{}", book.edition_olid);
-                let edition = dbqueries::edition(&book.edition_olid).unwrap();
-                let author = dbqueries::author(&book.authors_olid).unwrap();
-
-                let cover = book_cover::BookCover::new(book, edition, author);
-                books_flowbox.insert(&cover, -1);
-            }
-            Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
-        };
+        let cover = book_cover::BookCover::new(book, edition, author);
+        books_flowbox.insert(&cover, -1);
     }
 
     fn setup_widget(&self, sender: Sender<Action>) {
