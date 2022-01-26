@@ -12,7 +12,6 @@ use glib::{GEnum, ParamSpec, ToValue};
 
 use rand::distributions::Alphanumeric;
 use rand::prelude::*;
-//use serde_json::Value;
 
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
@@ -279,7 +278,11 @@ impl BooksApplicationWindow {
                 }
                 match dbqueries::author(&entity.get_author().key) {
                     Ok(val) => {}
-                    Err(error) => {dbqueries::add_author(&entity)}
+                    Err(error) => {
+                        dbqueries::add_author(&entity);
+                        let author = dbqueries::author(&entity.get_author().key).unwrap();
+                        imp.authors_page.add_author(&author);
+                    }
                 }
                 match dbqueries::work(&entity.get_work().key) {
                     Ok(val) => {}
@@ -311,7 +314,6 @@ impl BooksApplicationWindow {
                 let author = dbqueries::author(&book.authors_olid).unwrap();
 
                 imp.books_page.add_book(&book, &edition, &author);
-                imp.authors_page.add_author(&author);
             }
             Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
         };
