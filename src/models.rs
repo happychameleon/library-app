@@ -1,6 +1,4 @@
 use diesel::Queryable;
-
-//use openlibrary_client::Edition;
 use serde_json::Value;
 
 use super::schema::authors;

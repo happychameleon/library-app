@@ -1,4 +1,24 @@
--- Your SQL goes here
+
+-- devices connected to the same local library
+CREATE TABLE `devices` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    `devid` TEXT NOT NULL, -- unique device id that identifies a device that is connected to local lib
+    `pubkey` TEXT NOT NULL,
+    `privkey` TEXT,
+    `name` TEXT NOT NULL,
+    `home_libid` TEXT NOT NULL, -- libid of the devices home library
+    `is_current_device` INTEGER NOT NULL
+);
+
+-- libraries that this library is connected to inculding id info for this lib
+CREATE TABLE `libraries` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    `libid` TEXT NOT NULL, -- unique id that identifies every library
+    `pubkey` TEXT NOT NULL, -- public key, to connect to devices with lib data
+    `privkey` TEXT, -- private key only available if the library eq home, otherwise null
+    `name` TEXT NOT NULL, -- user facing name for libary
+    `is_home` INTEGER NOT NULL -- 0 eq not home, 1 eq is home
+);
 
 -- unique copy of a book, links to openlibrary data
 CREATE TABLE `books` (
@@ -7,7 +27,9 @@ CREATE TABLE `books` (
     `isbn` TEXT NOT NULL, -- isbn that was scaned from physical copy of book
     `edition_olid` TEXT NOT NULL,
     `authors_olid` TEXT NOT NULL,
-    `works_olid` TEXT NOT NULL
+    `works_olid` TEXT NOT NULL,
+    `home_libid` TEXT NOT NULL,
+    `current_libid` TEXT NOT NULL
 );
 
 -- corresponds to openlibrary editions
