@@ -7,7 +7,7 @@ CREATE TABLE `devices` (
     `privkey` TEXT,
     `name` TEXT NOT NULL,
     `home_libid` TEXT NOT NULL, -- libid of the devices home library
-    `is_current_device` INTEGER NOT NULL
+    `is_current_device` BOOLEAN NOT NULL DEFAULT 0
 );
 
 -- libraries that this library is connected to inculding id info for this lib
@@ -17,7 +17,7 @@ CREATE TABLE `libraries` (
     `pubkey` TEXT NOT NULL, -- public key, to connect to devices with lib data
     `privkey` TEXT, -- private key only available if the library eq home, otherwise null
     `name` TEXT NOT NULL, -- user facing name for libary
-    `is_home` INTEGER NOT NULL -- 0 eq not home, 1 eq is home
+    `is_home` BOOLEAN NOT NULL DEFAULT 0
 );
 
 -- unique copy of a book, links to openlibrary data

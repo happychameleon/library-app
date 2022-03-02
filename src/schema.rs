@@ -46,7 +46,7 @@ table! {
         privkey -> Nullable<Text>,
         name -> Text,
         home_libid -> Text,
-        is_current_device -> Integer,
+        is_current_device -> Bool,
     }
 }
 
@@ -109,7 +109,7 @@ table! {
         pubkey -> Text,
         privkey -> Nullable<Text>,
         name -> Text,
-        is_home -> Integer,
+        is_home -> Bool,
     }
 }
 
@@ -136,11 +136,4 @@ table! {
     }
 }
 
-allow_tables_to_appear_in_same_query!(
-    authors,
-    books,
-    devices,
-    editions,
-    libraries,
-    works,
-);
+allow_tables_to_appear_in_same_query!(authors, books, devices, editions, libraries, works,);
