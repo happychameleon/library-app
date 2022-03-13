@@ -1,10 +1,28 @@
 use diesel::Queryable;
 use serde_json::Value;
 
-use super::schema::authors;
-use super::schema::books;
-use super::schema::editions;
-use super::schema::works;
+use super::schema::{authors, books, devices, editions, libraries, works};
+
+#[derive(Queryable, PartialEq, Debug)]
+pub struct Devices {
+    pub id: i32,
+    pub devid: String,
+    pub pubkey: String,
+    pub privkey: Option<String>,
+    pub name: String,
+    pub home_libid: String,
+    pub is_current_device: bool,
+}
+
+#[derive(Queryable, PartialEq, Debug)]
+pub struct Libraries {
+    pub id: i32,
+    pub libid: String,
+    pub pubkey: String,
+    pub privkey: Option<String>,
+    pub name: String,
+    pub is_home: bool,
+}
 
 #[derive(Queryable, PartialEq, Debug)]
 pub struct Book {
@@ -14,6 +32,8 @@ pub struct Book {
     pub edition_olid: String,
     pub authors_olid: String,
     pub works_olid: String,
+    pub home_libid: String,
+    pub current_libid: String,
 }
 
 #[derive(Queryable, PartialEq, Debug)]
@@ -168,6 +188,27 @@ impl Work {
 }
 
 #[derive(Insertable)]
+#[table_name = "devices"]
+pub struct NewDevice<'a> {
+    pub devid: &'a str,
+    pub pubkey: &'a str,
+    pub privkey: Option<&'a str>,
+    pub name: &'a str,
+    pub home_libid: &'a str,
+    //pub is_current_device: &'a str,
+}
+
+#[derive(Insertable)]
+#[table_name = "libraries"]
+pub struct NewLibrary<'a> {
+    pub libid: &'a str,
+    pub pubkey: &'a str,
+    pub privkey: Option<&'a str>,
+    pub name: &'a str,
+    //pub is_home: &'a str,
+}
+
+#[derive(Insertable)]
 #[table_name = "books"]
 pub struct NewBook<'a> {
     pub uid: &'a str,
@@ -175,6 +216,8 @@ pub struct NewBook<'a> {
     pub edition_olid: &'a str,
     pub authors_olid: &'a str,
     pub works_olid: &'a str,
+    pub home_libid: &'a str,
+    pub current_libid: &'a str,
 }
 
 #[derive(Insertable)]

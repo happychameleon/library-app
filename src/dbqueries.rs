@@ -26,7 +26,16 @@ pub fn book(uid: &String) -> Result<Book, diesel::result::Error> {
     Ok(book)
 }
 
-pub fn add_book(uid: &String, isbn: &String, edition_olid: &String, authors_olid: &String, works_olid: &String) {
+pub fn remove_book(uid: &String) {}
+
+pub fn add_book(
+    uid: &String,
+    isbn: &String,
+    edition_olid: &String,
+    authors_olid: &String,
+    works_olid: &String,
+    home_libid: &String,
+) {
     let connection = database::connection().get().unwrap();
 
     let book: NewBook = NewBook {
@@ -35,6 +44,8 @@ pub fn add_book(uid: &String, isbn: &String, edition_olid: &String, authors_olid
         edition_olid: edition_olid,
         authors_olid: authors_olid,
         works_olid: works_olid,
+        home_libid: home_libid,
+        current_libid: home_libid, // When adding a new book to the library the current lib and home lib should be the same
     };
 
     diesel::insert_into(books::table)
@@ -60,6 +71,8 @@ pub fn edition(olid: &String) -> Result<Edition, diesel::result::Error> {
 
     Ok(edition)
 }
+
+pub fn remove_edition(olid: &String) {}
 
 pub fn add_edition(book: &Entity) {
     let connection = database::connection().get().unwrap();
@@ -250,6 +263,8 @@ pub fn works() -> Result<Vec<Work>, diesel::result::Error> {
     Ok(works)
 }
 
+pub fn remove_work(olid: &String) {}
+
 pub fn work(olid: &String) -> Result<Work, diesel::result::Error> {
     let connection = database::connection().get().unwrap();
 
@@ -346,6 +361,8 @@ pub fn author(olid: &String) -> Result<Author, diesel::result::Error> {
 
     Ok(author)
 }
+
+pub fn remove_author(olid: &String) {}
 
 pub fn add_author(entity: &Entity) {
     let connection = database::connection().get().unwrap();

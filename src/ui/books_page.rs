@@ -9,10 +9,9 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-
 use crate::application::Action;
 use crate::dbqueries;
-use crate::models::{Book, Edition, Author};
+use crate::models::{Author, Book, Edition};
 use crate::path;
 use crate::ui::book_cover;
 

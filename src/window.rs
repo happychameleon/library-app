@@ -4,9 +4,9 @@ use std::fs;
 use std::path::PathBuf;
 
 use futures::executor::block_on;
-use glib::PRIORITY_DEFAULT;
 use glib::MainContext;
 use glib::Sender;
+use glib::PRIORITY_DEFAULT;
 use glib::{clone, Value};
 use glib::{GEnum, ParamSpec, ToValue};
 
@@ -24,13 +24,13 @@ use openlibrary_client::{Client, CoverKey, CoverSize};
 
 use crate::application::{Action, BooksApplication, BooksView};
 use crate::config::{APP_ID, PROFILE};
+use crate::dbqueries;
+use crate::models::{Author, Book, Edition};
+use crate::path;
 use crate::ui::authors_page::AuthorsPage;
 use crate::ui::book_form_page::BookFormPage;
 use crate::ui::books_page::BooksPage;
 use crate::ui::scan_book_page::ScanBookPage;
-use crate::dbqueries;
-use crate::models::{Book, Edition, Author};
-use crate::path;
 
 impl Default for BooksView {
     fn default() -> Self {
@@ -259,6 +259,8 @@ impl BooksApplicationWindow {
             .take(32)
             .map(char::from)
             .collect();
+        // TODO: Make this a real libid saved and retrived from the database
+        let home_libid = String::from("home_lib_testid_123");
 
         let isbn_string = String::from(isbn);
 
@@ -269,12 +271,13 @@ impl BooksApplicationWindow {
                     &isbn_string,
                     &entity.get_olid(),
                     &entity.get_author().key,
-                    &entity.get_work().key
+                    &entity.get_work().key,
+                    &home_libid,
                 );
 
                 match dbqueries::edition(&entity.get_olid()) {
                     Ok(val) => {}
-                    Err(error) => {dbqueries::add_edition(&entity)}
+                    Err(error) => dbqueries::add_edition(&entity),
                 }
                 match dbqueries::author(&entity.get_author().key) {
                     Ok(val) => {}
@@ -286,10 +289,10 @@ impl BooksApplicationWindow {
                 }
                 match dbqueries::work(&entity.get_work().key) {
                     Ok(val) => {}
-                    Err(error) => {dbqueries::add_work(&entity);}
+                    Err(error) => {
+                        dbqueries::add_work(&entity);
+                    }
                 }
-
-
 
                 debug!("Adding book with uid: {}", uid);
 
@@ -305,7 +308,9 @@ impl BooksApplicationWindow {
                             Err(error) => debug!("{}", error),
                         };
                     }
-                    None => {}
+                    None => {
+                        debug!("No cover to download")
+                    }
                 };
 
                 let book = dbqueries::book(&uid).unwrap();
@@ -317,7 +322,6 @@ impl BooksApplicationWindow {
             }
             Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
         };
-
     }
 
     pub fn setup_widgets(&self, sender: Sender<Action>) {
