@@ -29,6 +29,30 @@ table! {
     books (id) {
         id -> Integer,
         uid -> Text,
+        isbn -> Text,
+        edition_olid -> Text,
+        authors_olid -> Text,
+        works_olid -> Text,
+        home_libid -> Text,
+        current_libid -> Text,
+    }
+}
+
+table! {
+    devices (id) {
+        id -> Integer,
+        devid -> Text,
+        pubkey -> Text,
+        privkey -> Nullable<Text>,
+        name -> Text,
+        home_libid -> Text,
+        is_current_device -> Bool,
+    }
+}
+
+table! {
+    editions (id) {
+        id -> Integer,
         olid -> Text,
         title -> Text,
         full_title -> Nullable<Text>,
@@ -79,6 +103,17 @@ table! {
 }
 
 table! {
+    libraries (id) {
+        id -> Integer,
+        libid -> Text,
+        pubkey -> Text,
+        privkey -> Nullable<Text>,
+        name -> Text,
+        is_home -> Bool,
+    }
+}
+
+table! {
     works (id) {
         id -> Integer,
         olid -> Text,
@@ -101,4 +136,4 @@ table! {
     }
 }
 
-allow_tables_to_appear_in_same_query!(authors, books, works,);
+allow_tables_to_appear_in_same_query!(authors, books, devices, editions, libraries, works,);

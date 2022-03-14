@@ -7,7 +7,7 @@ use gtk::CompositeTemplate;
 use gtk::{gio, glib};
 use once_cell::unsync::OnceCell;
 
-use crate::models::{Author, Book};
+use crate::models::{Author, Book, Edition};
 use crate::path;
 
 mod imp {
@@ -64,17 +64,18 @@ glib::wrapper! {
 }
 
 impl BookCover {
-    pub fn new(book: Book, author: Author) -> Self {
+    pub fn new(book: &Book, edition: &Edition, author: &Author) -> Self {
         let cover = glib::Object::new::<Self>(&[]).unwrap();
 
         let imp = imp::BookCover::from_instance(&cover);
 
-        match book.covers {
+        match &edition.covers {
             Some(cover) => {
                 let mut image_path = path::DATA.clone();
-                let isbn: Vec<String> = serde_json::from_str(&book.isbn13.unwrap()).unwrap(); // some books will not have a isbn 13 saved if using only ol data
-                debug!("isbn: {}", isbn[0]);
-                image_path.push(format!("covers/{}.jpg", isbn[0]));
+                //let isbn: Vec<String> = serde_json::from_str(&edition.isbn13.unwrap()).unwrap(); // some editions will not have a isbn 13 saved if using only ol data
+                let isbn = &book.isbn;
+                debug!("isbn: {}", isbn);
+                image_path.push(format!("covers/{}.jpg", isbn));
                 imp.cover_image.set_from_file(image_path.to_str().unwrap());
                 imp.cover_image.set_pixel_size(200)
             }
@@ -83,7 +84,7 @@ impl BookCover {
             }
         }
 
-        imp.book_title.set_label(&book.title);
+        imp.book_title.set_label(&edition.title);
         let authors = &author.name;
         debug!("authors: {}", authors);
         imp.author_name.set_label(authors);

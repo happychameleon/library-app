@@ -7,7 +7,7 @@ use once_cell::unsync::OnceCell;
 
 use crate::application::Action;
 use crate::dbqueries;
-use crate::models::Book;
+use crate::models::Author;
 use crate::path;
 use crate::ui::author_row;
 
@@ -70,8 +70,17 @@ impl AuthorsPage {
         let authors = dbqueries::authors().unwrap();
 
         for author in authors {
-            let author_row = author_row::AuthorRow::new(author);
+            let author_row = author_row::AuthorRow::new(&author);
             listbox.insert(&author_row, -1)
         }
+    }
+
+    pub fn add_author(&self, author: &Author) {
+        let imp = imp::AuthorsPage::from_instance(self);
+
+        let authors_listbox: gtk::ListBox = imp.authors_listbox.clone().downcast().unwrap();
+
+        let author_row = author_row::AuthorRow::new(&author);
+        authors_listbox.insert(&author_row, -1);
     }
 }

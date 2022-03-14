@@ -1,6 +1,12 @@
 use log::{debug, error};
 
+use std::fs;
+use std::path::PathBuf;
+
+use futures::executor::block_on;
+use glib::MainContext;
 use glib::Sender;
+use glib::PRIORITY_DEFAULT;
 use glib::{clone, Value};
 use glib::{GEnum, ParamSpec, ToValue};
 
@@ -14,8 +20,13 @@ use gtk_macros::*;
 
 use adw::prelude::*;
 
+use openlibrary_client::{Client, CoverKey, CoverSize};
+
 use crate::application::{Action, BooksApplication, BooksView};
 use crate::config::{APP_ID, PROFILE};
+use crate::dbqueries;
+use crate::models::{Author, Book, Edition};
+use crate::path;
 use crate::ui::authors_page::AuthorsPage;
 use crate::ui::book_form_page::BookFormPage;
 use crate::ui::books_page::BooksPage;
@@ -226,9 +237,91 @@ impl BooksApplicationWindow {
 
     pub fn show_code_detected(&self, isbn: &str) {
         let imp = imp::BooksApplicationWindow::from_instance(self);
-        imp.books_page.add_book(isbn);
+        //imp.books_page.add_book(isbn);
 
         debug!("Show code function compleated");
+
+        let client = Client::new();
+        let image_client = Client::new();
+
+        let entity = block_on(client.entity_by_isbn(isbn));
+
+        let mut image_path = path::DATA.clone();
+        image_path.push(format!("covers/"));
+        if !image_path.exists() {
+            fs::create_dir_all(image_path.clone()).unwrap();
+        }
+        image_path.push(format!("{}.jpg", isbn));
+
+        let mut rng = rand::thread_rng();
+        let uid: String = (&mut rng)
+            .sample_iter(Alphanumeric)
+            .take(32)
+            .map(char::from)
+            .collect();
+        // TODO: Make this a real libid saved and retrived from the database
+        let home_libid = String::from("home_lib_testid_123");
+
+        let isbn_string = String::from(isbn);
+
+        match entity {
+            Ok(entity) => {
+                dbqueries::add_book(
+                    &uid,
+                    &isbn_string,
+                    &entity.get_olid(),
+                    &entity.get_author().key,
+                    &entity.get_work().key,
+                    &home_libid,
+                );
+
+                match dbqueries::edition(&entity.get_olid()) {
+                    Ok(val) => {}
+                    Err(error) => dbqueries::add_edition(&entity),
+                }
+                match dbqueries::author(&entity.get_author().key) {
+                    Ok(val) => {}
+                    Err(error) => {
+                        dbqueries::add_author(&entity);
+                        let author = dbqueries::author(&entity.get_author().key).unwrap();
+                        imp.authors_page.add_author(&author);
+                    }
+                }
+                match dbqueries::work(&entity.get_work().key) {
+                    Ok(val) => {}
+                    Err(error) => {
+                        dbqueries::add_work(&entity);
+                    }
+                }
+
+                debug!("Adding book with uid: {}", uid);
+
+                match entity.get_edition().covers {
+                    Some(cover) => {
+                        debug!("Image cover path: {}", image_path.to_str().unwrap());
+                        match block_on(image_client.save_cover(
+                            CoverSize::L,
+                            String::from(image_path.to_str().unwrap()),
+                            CoverKey::ISBN(String::from(isbn)),
+                        )) {
+                            Ok(val) => debug!("All well"),
+                            Err(error) => debug!("{}", error),
+                        };
+                    }
+                    None => {
+                        debug!("No cover to download")
+                    }
+                };
+
+                let book = dbqueries::book(&uid).unwrap();
+                debug!("{}", book.edition_olid);
+                let edition = dbqueries::edition(&book.edition_olid).unwrap();
+                let author = dbqueries::author(&book.authors_olid).unwrap();
+
+                imp.books_page.add_book(&book, &edition, &author);
+            }
+            Err(error) => debug!("Failed to parse entity {} form ol: {}", isbn, error),
+        };
     }
 
     pub fn setup_widgets(&self, sender: Sender<Action>) {
